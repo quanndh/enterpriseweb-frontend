@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import BaseLayout from './views/BaseLayout';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { connect } from "react-redux";
 
-function App() {
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: "#38d39f" }
+  },
+});
+
+function App(props) {
+  let { user } = props;
+  if (!Object.keys(user).length) user = JSON.parse(localStorage.getItem('userInfo'))
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router >
+      <ThemeProvider theme={theme}>
+        <Switch >
+          <Route path="/login" exact render={props => {
+            return <LoginForm {...props} />
+          }} />
+          <Route path="/" exact render={props => {
+            return <BaseLayout {...props} user={user} />
+          }} />
+        </Switch>
+      </ThemeProvider>
+
+    </Router>
   );
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    user: state.userReducer.user
+  }
+}
+
+export default connect(mapStateToProps)(App);

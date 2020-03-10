@@ -6,6 +6,6 @@ export default {
     },
     login: (data) => {
         return request('/api/user/login', data, 'POST')
-    },
+    }
 
 }
