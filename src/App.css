@@ -243,6 +243,44 @@ a:hover{
 	background-position: right;
 }
 
+.paper-wrapper {
+	padding: 24px 32px;
+	width: 100%;
+	height: 275px;
+}
+
+.form-wrapper{
+	padding: 24px 32px;
+	width: 100%;
+	height: auto;
+}
+
+.MuiAvatar-colorDefault {
+	background-color: #38d39f !important;
+}
+
+.MuiSvgIcon-root:hover {
+	color: #38d39f;
+	cursor: pointer;
+}
+
+.MuiPaper-root .MuiAlert-root .MuiAlert-filledError .MuiPaper-elevation0 {
+	top: 30
+}
+
+.paper-wrapper li {
+	padding: 0
+}
+
+.user-detail-wrapper {
+	display: flex;
+}
+
+.df {
+	display: flex;
+	align-items: center;
+}
+
 
 @media screen and (max-width: 1050px){
 	.container{

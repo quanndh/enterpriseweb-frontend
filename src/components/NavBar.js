@@ -98,16 +98,20 @@ const NavBar = props => {
 
     const openMenu = Boolean(anchorEl);
 
+    // let { toggleDrawer } = props;
+
     const handleMenu = event => {
         setAnchorEl(event.currentTarget);
     };
 
     const handleDrawerOpen = () => {
         setOpen(true);
+        // toggleDrawer(true)
     };
 
     const handleDrawerClose = () => {
         setOpen(false);
+        // toggleDrawer(false)
     };
 
     const handleClose = () => {
@@ -185,7 +189,7 @@ const NavBar = props => {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button key={'Trang chủ'}>
+                    <ListItem button key={'Trang chủ'} onClick={handleDrawerClose}>
                         <Link to="/" className={classes.link}>
                             <ListItemIcon>
                                 <HomeIcon />
@@ -194,20 +198,20 @@ const NavBar = props => {
                         </Link>
 
                     </ListItem>
-                    <ListItem button key={'Quản lý người dùng'}>
+                    <ListItem button key={'Quản lý người dùng'} onClick={handleDrawerClose}>
                         <Link to="/users" className={classes.link}>
                             <ListItemIcon><GroupIcon /></ListItemIcon>
                             <ListItemText primary={`Quản lý người dùng`} />
                         </Link>
                     </ListItem>
-                    <ListItem button key={'Quản lý lớp học'} >
+                    <ListItem button key={'Quản lý lớp học'} onClick={handleDrawerClose}>
                         <Link to="/classes" className={classes.link}>
                             <ListItemIcon><ClassIcon /></ListItemIcon>
                             <ListItemText primary={`Quản lý lớp học`} />
                         </Link>
 
                     </ListItem>
-                    <ListItem button key={'Thống kê'}>
+                    <ListItem button key={'Thống kê'} onClick={handleDrawerClose}>
                         <Link to="/statistic" className={classes.link}>
                             <ListItemIcon><EqualizerIcon /></ListItemIcon>
                             <ListItemText primary={`Thống kê`} />

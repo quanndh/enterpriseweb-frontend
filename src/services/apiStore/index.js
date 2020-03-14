@@ -31,6 +31,39 @@ export default {
     },
     actHideLoading: (data) => {
         store.dispatch({ type: 'HIDE_LOADING' })
+    },
+    actSetUserList: (data) => {
+        store.dispatch({ type: 'SET_USER_LIST', data })
+    },
+    actSetActivity: (data) => {
+        store.dispatch({ type: 'SET_ACTIVITY', data })
+    },
+    actInsertUser: data => {
+        store.dispatch({ type: 'INSERT_USER', data })
+    },
+    actUpdateUser: data => {
+        store.dispatch({ type: 'UPDATE_USER', data })
+    },
+    actDeleteUser: data => {
+        store.dispatch({ type: 'DELETE_USER', data })
+    },
+    actSetListClass: data => {
+        store.dispatch({ type: 'SET_LIST_CLASS', data })
+    },
+    actAddClass: data => {
+        store.dispatch({ type: 'ADD_CLASS', data })
+    },
+    actAddStudentToClass: data => {
+        store.dispatch({ type: 'ADD_STUDENT_CLASS', data })
+    },
+    actDeleteClass: data => {
+        store.dispatch({ type: 'DELETE_CLASS', data })
+    },
+    actRemoveStudentFromClass: data => {
+        store.dispatch({ type: 'REMOVE_STUDENT', data })
+    },
+    actUpdateClassTutor: data => {
+        store.dispatch({ type: 'UPDATE_CLASS_TUTOR', data })
     }
 
 }

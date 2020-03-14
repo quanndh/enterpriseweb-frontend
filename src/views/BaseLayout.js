@@ -12,6 +12,11 @@ import evening from '../assets/img/evening.jpg'
 import afternoon from '../assets/img/afternoon.jpg';
 import morning from '../assets/img/morning.jpg'
 import moment from 'moment'
+import UserView from './UserView';
+import { Switch, Route, Redirect } from 'react-router-dom'
+import ClassView from './ClassView';
+import { useSelector } from 'react-redux';
+import utils from '../services/utils';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -20,6 +25,18 @@ const useStyles = makeStyles(theme => ({
         right: theme.spacing(2),
     },
 }));
+
+const PrivateRoute = (props) => {
+    let userReducer = useSelector(state => state.userReducer);
+    let { user } = userReducer;
+    if (!Object.keys(user).length) user = JSON.parse(localStorage.getItem('userInfo'));
+    if (!Object.keys(user).length) {
+        return <Redirect to="/login" />
+    }
+    return (
+        <Route {...props} />
+    )
+}
 
 function ScrollTop(props) {
     const { children, window } = props;
@@ -51,32 +68,46 @@ const BaseLayout = props => {
     let { user } = props;
     let location = useLocation();
 
-    const [pathName, setPathname] = useState(location.pathname)
     const [bg, setBg] = useState(undefined);
 
+    // const [open, setOpen] = useState(false);
+
+    // const toggleDrawer = state => (
+    //     setOpen(state)
+    // )
+
     useEffect(() => {
-        setPathname(location.pathname)
         if (6 <= moment().hour() && moment().hour() <= 12) {
             setBg(morning)
         }
         else if (12 < moment().hour() && moment().hour() < 19) {
             setBg(afternoon)
         } else setBg(evening)
-    }, [location])
-
+    }, [])
     return (
         <Container maxWidth="xl">
-            <NavBar />
+            <NavBar user={user} />
             <div
                 className="app-body"
                 style={{
-                    backgroundImage: `url(${bg})`
+                    backgroundImage: `${location.pathname === "/" ? `url(${bg})` : "none"}`
                 }}>
-                {pathName === "/" && <Welcome user={user} {...props} />}
+                <Switch>
+                    <PrivateRoute exact path="/" render={props => {
+                        return <Welcome {...props} user={user} />;
+                    }} />
+                    <PrivateRoute exact path="/users" render={props => {
+                        return <UserView {...props} user={user} />;
+                    }} />
+                    <PrivateRoute exact path="/classes" render={props => {
+                        return <ClassView {...props} user={user} />
+                    }} />
+                </Switch>
+
             </div>
-            <ScrollTop {...props}>
-                <Fab color="secondary" size="large" aria-label="scroll back to top">
-                    <KeyboardArrowUpIcon />
+            <ScrollTop {...props} >
+                <Fab style={utils.isMobile() ? { bottom: -5, right: -1 } : { bottom: 40, right: 10 }} color="primary" size="large" aria-label="scroll back to top">
+                    <KeyboardArrowUpIcon style={{ color: "white" }} />
                 </Fab>
             </ScrollTop>
         </Container>

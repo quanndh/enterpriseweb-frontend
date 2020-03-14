@@ -37,7 +37,8 @@ const LoginForm = (props) => {
         if (rs.code === 0) {
             apiStore.login(rs.data, rs.token)
             history.push('/')
-
+        } else {
+            apiStore.showUi(rs.message, rs.code)
         }
     }
 

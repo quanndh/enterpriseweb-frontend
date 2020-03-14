@@ -10,7 +10,7 @@ const uiReducer = (state = initialState, action) => {
         case 'SHOW_UI':
             return { ...state, open: true, message: action.message, code: action.code }
         case 'HIDE_UI':
-            return { ...state, open: false, message: "", code: null }
+            return { ...state, open: false }
         case 'SHOW_LOADING':
             return { ...state, loading: true }
         case 'HIDE_LOADING':

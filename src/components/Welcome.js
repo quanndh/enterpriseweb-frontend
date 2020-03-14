@@ -25,7 +25,6 @@ const Welcome = props => {
         const getWeather = async () => {
             if (latitude && longitude) {
                 let rs = await axios.get(weatherUrl)
-                console.log(rs.data.currently)
                 if (rs.data.currently)
                     setWeather(rs.data.currently)
                 else {
