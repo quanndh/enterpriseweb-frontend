@@ -74,14 +74,22 @@ const UserView = props => {
     const getUserList = async () => {
         setIsLoading(true)
         let rs = await dataService.getUserList()
-        apiStore.actSetUserList(rs.data)
+        if (rs.code !== 0) {
+            apiStore.showUi(rs.message, rs.code)
+        } else {
+            apiStore.actSetUserList(rs.data)
+        }
         setIsLoading(false)
     }
 
     const getUserActivity = async (userId) => {
         setActivityLoad(true)
         let rs = await dataService.getUserActivity({ userId })
-        apiStore.actSetActivity(rs.data)
+        if (rs.code !== 0) {
+            apiStore.showUi(rs.message, rs.code)
+        } else {
+            apiStore.actSetActivity(rs.data)
+        }
         setActivityLoad(false)
     }
 
@@ -210,7 +218,7 @@ const UserView = props => {
                     selection={true}
                     onChangeRowsPerPage={toggleTableLoad}
                     onSearchChange={toggleTableLoad}
-                    onRowClick={handleSelectUser}
+                    onRowClick={user.role === 1 && handleSelectUser}
                     editable={editable}
 
                 />

@@ -17,6 +17,8 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import ClassView from './ClassView';
 import { useSelector } from 'react-redux';
 import utils from '../services/utils';
+import UserClass from './UserClass';
+import UserClassDetail from './UserClassDetail';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -85,7 +87,7 @@ const BaseLayout = props => {
         } else setBg(evening)
     }, [])
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" style={{ height: "100%" }}>
             <NavBar user={user} />
             <div
                 className="app-body"
@@ -101,6 +103,12 @@ const BaseLayout = props => {
                     }} />
                     <PrivateRoute exact path="/classes" render={props => {
                         return <ClassView {...props} user={user} />
+                    }} />
+                    <PrivateRoute exact path="/users/classes" render={props => {
+                        return <UserClass {...props} user={user} />
+                    }} />
+                    <PrivateRoute exact path="/users/classes/:classId" render={props => {
+                        return <UserClassDetail {...props} user={user} />
                     }} />
                 </Switch>
 

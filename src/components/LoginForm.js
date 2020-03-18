@@ -36,9 +36,15 @@ const LoginForm = (props) => {
         let rs = await dataService.login(formData)
         if (rs.code === 0) {
             apiStore.login(rs.data, rs.token)
-            history.push('/')
+            history.push(rs.data.role <= 2 ? '/' : "/users/classes")
         } else {
             apiStore.showUi(rs.message, rs.code)
+        }
+    }
+
+    const handleKeyPress = e => {
+        if (e.key === 'Enter') {
+            handleSubmit()
         }
     }
 
@@ -60,6 +66,7 @@ const LoginForm = (props) => {
                             <div className="div">
                                 <h5>Email</h5>
                                 <input
+                                    onKeyPress={handleKeyPress}
                                     type="text"
                                     className="input"
                                     name="email"
@@ -76,6 +83,7 @@ const LoginForm = (props) => {
                             <div className="div">
                                 <h5>Password</h5>
                                 <input
+                                    onKeyPress={handleKeyPress}
                                     type="password"
                                     className="input"
                                     name="password"

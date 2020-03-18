@@ -29,7 +29,7 @@ const UserDetail = props => {
     } else role = "Student"
     return (
         <div className="user-detail-wrapper">
-            {user.avatar ? <Avatar alt="avatar" src={user.avatar} style={{ fontSize: utils.isMobile() ? 70 : 140, marginRight: 24 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 70 : 140, height: utils.isMobile() ? 70 : 140, marginRight: 24 }} >{getShortName(user.fullName)}</Avatar>}
+            {user.avatar ? <Avatar alt="avatar" src={user.avatar} style={{ width: utils.isMobile() ? 70 : 140, marginRight: 24, height: utils.isMobile() ? 70 : 140 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 70 : 140, height: utils.isMobile() ? 70 : 140, marginRight: 24 }} >{getShortName(user.fullName)}</Avatar>}
             <div style={{ display: "flex", flexDirection: 'column', justifyContent: 'space-between', width: "100%" }}>
                 <div className="df" style={{ marginBottom: utils.isMobile() ? 20 : 80, alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <div>

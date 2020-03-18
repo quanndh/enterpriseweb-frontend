@@ -31,7 +31,6 @@ const request = async (url, data, method) => {
             return response.data
         }
         if (response.status === 401) {
-            alert('aaaaa');
             apiStore.logout();
         }
 

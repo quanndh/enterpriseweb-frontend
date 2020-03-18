@@ -18,13 +18,12 @@ import ClassIcon from '@material-ui/icons/Class';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import { Link } from 'react-router-dom'
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import logo from '../assets/img/logo.png'
 import utils from '../services/utils/index.js'
 import HomeIcon from '@material-ui/icons/Home';
+import PersonalDrawer from './PersonalDrawer';
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -62,6 +61,31 @@ const useStyles = makeStyles(theme => ({
     drawerPaper: {
         width: drawerWidth,
     },
+    drawerOpen: {
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    drawerClose: {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: 'hidden',
+        width: theme.spacing(7) + 1,
+        [theme.breakpoints.up('sm')]: {
+            width: theme.spacing(9) + 1,
+        },
+    },
+    toolbar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        ...theme.mixins.toolbar,
+    },
     drawerHeader: {
         display: 'flex',
         alignItems: 'center',
@@ -91,18 +115,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const NavBar = props => {
+    let { user } = props;
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const openMenu = Boolean(anchorEl);
-
-    // let { toggleDrawer } = props;
-
-    const handleMenu = event => {
-        setAnchorEl(event.currentTarget);
-    };
+    const [openPersonal, setOpenPersonal] = React.useState(false)
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -114,9 +131,9 @@ const NavBar = props => {
         // toggleDrawer(false)
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const handleTogglePersonal = () => {
+        setOpenPersonal(!openPersonal)
+    }
 
     return (
         <div className={classes.root} id="back-to-top-anchor">
@@ -147,29 +164,11 @@ const NavBar = props => {
                             aria-label="account of current user"
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
-                            onClick={handleMenu}
+                            onClick={handleTogglePersonal}
                             color="inherit"
                         >
                             <AccountCircle style={{ fontSize: 36 }} />
                         </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={openMenu}
-                            onClose={handleClose}
-                        >
-                            <MenuItem>Profile</MenuItem>
-                            <MenuItem>My account</MenuItem>
-                        </Menu>
                     </div>
                 </Toolbar>
             </AppBar>
@@ -189,36 +188,58 @@ const NavBar = props => {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button key={'Trang chủ'} onClick={handleDrawerClose}>
-                        <Link to="/" className={classes.link}>
-                            <ListItemIcon>
-                                <HomeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={`Trang chủ`} />
-                        </Link>
+                    {
+                        user.role <= 2 ? (
+                            <React.Fragment>
+                                <ListItem button key={'Homepage'} onClick={handleDrawerClose}>
+                                    <Link to="/" className={classes.link}>
+                                        <ListItemIcon>
+                                            <HomeIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={`Homepage`} />
+                                    </Link>
 
-                    </ListItem>
-                    <ListItem button key={'Quản lý người dùng'} onClick={handleDrawerClose}>
-                        <Link to="/users" className={classes.link}>
-                            <ListItemIcon><GroupIcon /></ListItemIcon>
-                            <ListItemText primary={`Quản lý người dùng`} />
-                        </Link>
-                    </ListItem>
-                    <ListItem button key={'Quản lý lớp học'} onClick={handleDrawerClose}>
-                        <Link to="/classes" className={classes.link}>
-                            <ListItemIcon><ClassIcon /></ListItemIcon>
-                            <ListItemText primary={`Quản lý lớp học`} />
-                        </Link>
+                                </ListItem>
+                                <ListItem button key={'User Management'} onClick={handleDrawerClose}>
+                                    <Link to="/users" className={classes.link}>
+                                        <ListItemIcon><GroupIcon /></ListItemIcon>
+                                        <ListItemText primary={`User Management`} />
+                                    </Link>
+                                </ListItem>
+                                <ListItem button key={'Class Management'} onClick={handleDrawerClose}>
+                                    <Link to="/classes" className={classes.link}>
+                                        <ListItemIcon><ClassIcon /></ListItemIcon>
+                                        <ListItemText primary={`Class Management`} />
+                                    </Link>
+                                </ListItem>
+                                <ListItem button key={'Statistic'} onClick={handleDrawerClose}>
+                                    <Link to="/statistic" className={classes.link}>
+                                        <ListItemIcon><EqualizerIcon /></ListItemIcon>
+                                        <ListItemText primary={`Statistic`} />
+                                    </Link>
+                                </ListItem>
+                            </React.Fragment>
+                        ) : (
+                                <React.Fragment>
+                                    <ListItem button key={'User Management'} onClick={handleDrawerClose}>
+                                        <Link to="/users/classes" className={classes.link}>
+                                            <ListItemIcon><ClassIcon /></ListItemIcon>
+                                            <ListItemText primary={`My classes`} />
+                                        </Link>
+                                    </ListItem>
+                                    {/* <ListItem button key={'Messenger'} onClick={handleDrawerClose}>
+                                        <Link to="/classes" className={classes.link}>
+                                            <ListItemIcon><ClassIcon /></ListItemIcon>
+                                            <ListItemText primary={`Class Management`} />
+                                        </Link>
+                                    </ListItem> */}
+                                </React.Fragment>
+                            )
+                    }
 
-                    </ListItem>
-                    <ListItem button key={'Thống kê'} onClick={handleDrawerClose}>
-                        <Link to="/statistic" className={classes.link}>
-                            <ListItemIcon><EqualizerIcon /></ListItemIcon>
-                            <ListItemText primary={`Thống kê`} />
-                        </Link>
-                    </ListItem>
                 </List>
             </Drawer>
+            <PersonalDrawer user={user} open={openPersonal} togglePersonal={handleTogglePersonal} />
         </div>
     )
 }

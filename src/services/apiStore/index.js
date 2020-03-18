@@ -56,6 +56,9 @@ export default {
     actAddStudentToClass: data => {
         store.dispatch({ type: 'ADD_STUDENT_CLASS', data })
     },
+    actUpdateClass: data => {
+        store.dispatch({ type: 'UPDATE_CLASS', data })
+    },
     actDeleteClass: data => {
         store.dispatch({ type: 'DELETE_CLASS', data })
     },
@@ -64,6 +67,14 @@ export default {
     },
     actUpdateClassTutor: data => {
         store.dispatch({ type: 'UPDATE_CLASS_TUTOR', data })
+    },
+    actUserGetClassList: data => {
+        store.dispatch({ type: 'SET_CLASS_LIST', data })
+    },
+    actSetClassDetail: data => {
+        store.dispatch({ type: 'SET_CLASS_DETAIL', data })
+    },
+    actAddNewPost: data => {
+        store.dispatch({ type: 'ADD_NEW_POST', data })
     }
-
 }

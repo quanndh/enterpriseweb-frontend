@@ -1,9 +1,12 @@
 let initialState = {
-    classList: []
+    classList: [],
+    classInfo: {}
 }
 
 const classReducer = (state = initialState, action) => {
     let tempList = [...state.classList]
+    let tempClassInfo = { ...state.classInfo }
+    console.log(tempClassInfo, 123)
     switch (action.type) {
         case 'SET_LIST_CLASS':
             return { ...state, classList: action.data }
@@ -12,7 +15,9 @@ const classReducer = (state = initialState, action) => {
         case 'UPDATE_CLASS':
             for (let i = 0; i < tempList.length; i++) {
                 if (tempList[i].id === action.data.id) {
-                    tempList[i] = action.data
+                    tempList[i].title = action.data.title
+                    tempList[i].desc = action.data.desc
+                    tempList[i].isActive = action.data.isActive
                     break;
                 }
             }
@@ -46,6 +51,12 @@ const classReducer = (state = initialState, action) => {
                 }
             }
             return { ...state, classList: [...tempList] }
+        case 'SET_CLASS_DETAIL':
+            return { ...state, classInfo: action.data }
+        case 'ADD_NEW_POST':
+            let tempBlogs = tempClassInfo.blogs;
+            tempBlogs = [action.data, ...tempBlogs]
+            return { ...state, classInfo: { ...tempClassInfo, blogs: tempBlogs } }
         default:
             return state
     }

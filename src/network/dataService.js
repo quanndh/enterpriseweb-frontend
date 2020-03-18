@@ -39,5 +39,18 @@ export default {
     },
     getAvailableTutor: data => {
         return request('/api/class/get-available-tutor', data, 'POST')
+    },
+    changeClassState: data => {
+        return request('/api/class/update-class', data, 'PATCH')
+    },
+    getUserClass: data => {
+        return request('/api/user/get-class', data, 'POST');
+    },
+    getOneClassDetail: data => {
+        return request('/api/user/get-one-class-detail', data, 'POST')
+    },
+    createPost: data => {
+        return request('/api/user/create-blog', data, 'POST')
     }
+
 }

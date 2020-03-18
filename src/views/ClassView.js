@@ -21,9 +21,7 @@ import dataService from '../network/dataService';
 import apiStore from '../services/apiStore';
 import { connect } from 'react-redux'
 import Paper from '@material-ui/core/Paper';
-import utils from "../services/utils/index";
 import ClassDetail from '../components/ClassDetail';
-
 
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -53,6 +51,7 @@ const ClassView = props => {
         { title: 'Description', field: 'desc' },
         { title: 'Tutor', field: 'tutor.fullName', readonly: true },
         { title: 'Number of students', field: 'students.length', readonly: true },
+        { title: 'Status', field: 'isActive', lookup: { 0: 'Inactive', 1: 'Active' } }
     ]
     let options = {
         exportButton: true,
@@ -76,11 +75,6 @@ const ClassView = props => {
                     await handleUpdateClass(newData)
                     resolve()
                 }),
-            onRowDelete: oldData =>
-                new Promise(async resolve => {
-                    await handleDeleteClass(oldData)
-                    resolve()
-                }),
         }
     }
     if (user.role === 2) {
@@ -88,6 +82,11 @@ const ClassView = props => {
             onRowAdd: newData =>
                 new Promise(async resolve => {
                     await handleAddClass(newData)
+                    resolve()
+                }),
+            onRowUpdate: (newData, oldData) =>
+                new Promise(async resolve => {
+                    await handleUpdateClass(newData)
                     resolve()
                 }),
         }
@@ -136,11 +135,12 @@ const ClassView = props => {
         setIsLoading(false)
     }
 
-    const handleUpdateClass = newClass => {
-
-    }
-
-    const handleDeleteClass = delClass => {
+    const handleUpdateClass = async newClass => {
+        setIsLoading(true)
+        let rs = await dataService.changeClassState({ classId: newClass.id, title: newClass.title, isActive: newClass.isActive, desc: newClass.desc })
+        if (rs.code === 0) apiStore.actUpdateClass(rs.data)
+        apiStore.showUi(rs.message, rs.code)
+        setIsLoading(false)
 
     }
 

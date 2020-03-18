@@ -1,7 +1,8 @@
 let initialState = {
     user: {},
     userList: [],
-    activity: []
+    activity: [],
+    classList: []
 }
 
 const userReducer = (state = initialState, action) => {
@@ -31,6 +32,8 @@ const userReducer = (state = initialState, action) => {
                 }
             }
             return { ...state, userList: [...tempList] }
+        case "SET_CLASS_LIST":
+            return { ...state, classList: action.data }
         default:
             return state
     }
