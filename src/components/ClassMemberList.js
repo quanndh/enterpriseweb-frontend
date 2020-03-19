@@ -36,7 +36,7 @@ const ClassMemberList = props => {
             </Typography>
             <List>
                 {
-                    students.length && students.map(s => {
+                    students.length ? students.map(s => {
                         return (
                             <ListItem key={s.id}>
                                 <ListItemAvatar>
@@ -45,7 +45,7 @@ const ClassMemberList = props => {
                                 <ListItemText primary={s.fullName} secondary={s.email} />
                             </ListItem>
                         )
-                    })
+                    }) : null
                 }
             </List>
         </Paper>

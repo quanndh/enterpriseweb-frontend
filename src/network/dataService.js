@@ -51,6 +51,18 @@ export default {
     },
     createPost: data => {
         return request('/api/user/create-blog', data, 'POST')
+    },
+    addCommentToPost: data => {
+        return request('/api/user/comment', data, 'POST')
+    },
+    deletePost: data => {
+        return request('/api/user/delete-blog', data, 'DELETE')
+    },
+    deleteComment: data => {
+        return request('/api/user/delete-comment', data, 'DELETE')
+    },
+    downloadFile: data => {
+        return request('api/file/download-file', data, 'POST')
     }
 
 }

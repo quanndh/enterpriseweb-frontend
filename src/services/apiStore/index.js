@@ -76,5 +76,14 @@ export default {
     },
     actAddNewPost: data => {
         store.dispatch({ type: 'ADD_NEW_POST', data })
+    },
+    actAddNewComment: data => {
+        store.dispatch({ type: 'ADD_NEW_COMMENT', data })
+    },
+    actDeletePost: data => {
+        store.dispatch({ type: 'DELETE_POST', data })
+    },
+    actDeleteComment: data => {
+        store.dispatch({ type: 'DELETE_COMMENT', data })
     }
 }

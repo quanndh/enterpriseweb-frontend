@@ -5,8 +5,11 @@ let initialState = {
 
 const classReducer = (state = initialState, action) => {
     let tempList = [...state.classList]
-    let tempClassInfo = { ...state.classInfo }
-    console.log(tempClassInfo, 123)
+    let tempClassInfo = { ...state.classInfo };
+    let tempBlogs;
+    if (tempClassInfo.blogs) tempBlogs = [...tempClassInfo.blogs];
+
+
     switch (action.type) {
         case 'SET_LIST_CLASS':
             return { ...state, classList: action.data }
@@ -54,9 +57,31 @@ const classReducer = (state = initialState, action) => {
         case 'SET_CLASS_DETAIL':
             return { ...state, classInfo: action.data }
         case 'ADD_NEW_POST':
-            let tempBlogs = tempClassInfo.blogs;
             tempBlogs = [action.data, ...tempBlogs]
             return { ...state, classInfo: { ...tempClassInfo, blogs: tempBlogs } }
+        case 'ADD_NEW_COMMENT':
+            for (let i = 0; i < tempBlogs.length; i++) {
+                if (tempBlogs[i].id === action.data.blogId) {
+                    tempBlogs[i].comments = [...tempBlogs[i].comments, action.data]
+                    break;
+                }
+            }
+            return { ...state, classInfo: { ...tempClassInfo, blogs: tempBlogs } }
+        case 'DELETE_POST':
+            let index;
+            for (let i = 0; i < tempBlogs.length; i++) {
+                if (tempBlogs[i].id === action.data) {
+                    index = i;
+                    break;
+                }
+            }
+            tempBlogs = [...tempBlogs.slice(0, index), ...tempBlogs.slice(index + 1)]
+            return { ...state, classInfo: { ...tempClassInfo, blogs: tempBlogs } }
+        case 'DELETE_COMMENT': {
+            const blogIndex = tempBlogs.findIndex(el => el.id === action.data.blogId)
+            tempBlogs[blogIndex].comments = tempBlogs[blogIndex].comments.filter(el => el.id !== action.data.commentId)
+            return { ...state, classInfo: { ...tempClassInfo, blogs: [...tempBlogs] } }
+        }
         default:
             return state
     }

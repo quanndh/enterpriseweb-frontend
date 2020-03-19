@@ -117,6 +117,8 @@ const PersonalDrawer = props => {
             return
         }
 
+        console.log(rs.data, 111)
+
         let avatar = rs.data.data.url;
         rs = await dataService.updateUser({ id: user.id, avatar })
         if (rs.code === 0) {

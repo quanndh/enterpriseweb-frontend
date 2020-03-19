@@ -111,7 +111,7 @@ const BlogForm = props => {
                 {
                     uploadedFileName.length ? uploadedFileName.map((file, index) => {
                         return (
-                            <Paper className="file" elevation={3} key={index} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', borderRadius: 12, height: 50, padding: 14 }}>
+                            <Paper className="file" elevation={3} key={`uploadFile-${index}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', borderRadius: 12, height: 50, padding: 14 }}>
                                 <h3>{file}</h3>
                                 <Tooltip title="Remove">
                                     <IconButton onClick={() => handleRemoveFile(index)}>
@@ -162,7 +162,6 @@ const UserClassDetail = props => {
 
     let { classId } = props.match.params;
     let { user, classInfo } = props;
-    console.log(props);
 
     const [loading, setLoading] = useState(false);
     const [openShare, setOpenShare] = useState(false)
@@ -184,25 +183,30 @@ const UserClassDetail = props => {
     }
 
     let displayBlogs = Object.keys(classInfo).length && classInfo.blogs.length ? classInfo.blogs.map(blog => {
-        return <BlogDetail user={user} key={blog.id} detail={blog} />
+        return <BlogDetail user={user} key={`blog-${blog.id}`} detail={blog} />
     }) : null
 
     return (
         <div>
             {loading && <LinearProgress />}
             <div>
-                <div className="class-detail-wrapper">
+                <div className="class-detail-wrapper" key="class-wrapper">
                     <div className="class-detail-name">
                         <Typography variant={utils.isMobile() ? "h5" : "h2"} style={{ fontWeight: 540, color: "white", padding: 28 }} >
                             {classInfo.title}
                         </Typography>
                     </div>
-                    <Grid container spacing={3}>
-                        <Grid item md={4}>
-                            <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
-                        </Grid>
-                        <Grid item xs={12} md={8}>
-                            <Paper elevation={3} style={{ padding: utils.isMobile() ? 28 : 40, display: 'flex', alignItems: 'center', height: openShare ? "auto" : 85, borderRadius: 12, marginBottom: 40 }}>
+                    <Grid container spacing={3} key="grid-container-1">
+                        {
+                            !utils.isMobile() && (
+                                <Grid item md={4} key="grid-item-1">
+                                    <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
+                                </Grid>
+                            )
+                        }
+
+                        <Grid item xs={12} md={8} key="grid-item-2">
+                            <Paper elevation={3} style={{ padding: utils.isMobile() ? 16 : "20px 40px", display: 'flex', alignItems: 'center', height: openShare ? "auto" : 85, borderRadius: 12, marginBottom: 40 }}>
                                 {
                                     openShare ? (
                                         <BlogForm classId={classId} user={user} handleCloseForm={handleCloseForm} />
@@ -216,6 +220,13 @@ const UserClassDetail = props => {
                             </Paper>
                             {displayBlogs}
                         </Grid>
+                        {
+                            utils.isMobile() && (
+                                <Grid item xs={12} key="grid-item-4">
+                                    <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
+                                </Grid>
+                            )
+                        }
                     </Grid>
                 </div>
             </div>
