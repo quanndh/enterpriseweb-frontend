@@ -10,7 +10,6 @@ import { LinearProgress } from '@material-ui/core';
 import dataService from '../network/dataService';
 import Button from '@material-ui/core/Button';
 import apiStore from '../services/apiStore';
-import { post } from 'axios';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -110,11 +109,10 @@ const BlogDetail = props => {
 
     const handleDownloadFile = async (fullPath, fileName) => {
         setLoading(true)
-
-        // window.location.href = fullPath
-        console.log(fullPath)
-
-        setLoading(false)
+        setTimeout(() => {
+            window.open(fullPath)
+            setLoading(false)
+        }, 300)
     }
 
     return (

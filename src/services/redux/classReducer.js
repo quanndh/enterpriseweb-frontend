@@ -1,6 +1,7 @@
 let initialState = {
     classList: [],
-    classInfo: {}
+    classInfo: {},
+    meeting: {}
 }
 
 const classReducer = (state = initialState, action) => {
@@ -82,6 +83,12 @@ const classReducer = (state = initialState, action) => {
             tempBlogs[blogIndex].comments = tempBlogs[blogIndex].comments.filter(el => el.id !== action.data.commentId)
             return { ...state, classInfo: { ...tempClassInfo, blogs: [...tempBlogs] } }
         }
+        case 'SET_MEETING':
+            return { ...state, meeting: action.data }
+        case 'CLOSE_MEETING':
+            return { ...state, meeting: {} }
+        case 'UPDATE_MEETING':
+            return { ...state, meeting: { ...action.data } }
         default:
             return state
     }

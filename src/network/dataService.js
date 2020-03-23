@@ -63,6 +63,18 @@ export default {
     },
     downloadFile: data => {
         return request('api/file/download-file', data, 'POST')
-    }
+    },
+    createMeeting: data => {
+        return request('/api/user/create-meeting', data, 'POST')
+    },
+    joinMeeting: data => {
+        return request('/api/user/join-meeting', data, 'POST')
+    },
+    closeMeeting: data => {
+        return request('/api/user/close-meeting', data, "PATCH")
+    },
+    getOnlineUser: data => {
+        return request('/api/meeting/online', data, 'POST')
+    },
 
 }

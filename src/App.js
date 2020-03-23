@@ -7,7 +7,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { connect, useSelector } from "react-redux";
 import MessageUI from './components/MessageUI';
 import apiStore from './services/apiStore';
-
+import MeetingView from './views/MeetingView';
 
 const PrivateRoute = (props) => {
   let userReducer = useSelector(state => state.userReducer);
@@ -36,16 +36,21 @@ function App(props) {
   }
   return (
     <Router >
-      <div onClick={closeUI}>
+      <div onClick={closeUI} style={{ height: '100%' }}>
         <MessageUI open={open} message={message} code={code} />
         <ThemeProvider theme={theme}>
           <Switch >
             <Route path="/login" exact render={props => {
               return <LoginForm {...props} />
             }} />
+            <PrivateRoute exact path="/meeting/:meetingId" render={props => {
+              return <MeetingView {...props} user={user} />
+            }} />
             <PrivateRoute path="/" render={props => {
               return <BaseLayout {...props} user={user} />
             }} />
+
+
           </Switch>
         </ThemeProvider>
       </div>

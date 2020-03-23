@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import utils from '../services/utils';
 import UserClass from './UserClass';
 import UserClassDetail from './UserClassDetail';
+import NotFound from './NotFound';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -72,12 +73,6 @@ const BaseLayout = props => {
 
     const [bg, setBg] = useState(undefined);
 
-    // const [open, setOpen] = useState(false);
-
-    // const toggleDrawer = state => (
-    //     setOpen(state)
-    // )
-
     useEffect(() => {
         if (6 <= moment().hour() && moment().hour() <= 12) {
             setBg(morning)
@@ -98,6 +93,7 @@ const BaseLayout = props => {
                     <PrivateRoute exact path="/" render={props => {
                         return <Welcome {...props} user={user} />;
                     }} />
+
                     <PrivateRoute exact path="/users" render={props => {
                         return <UserView {...props} user={user} />;
                     }} />
@@ -109,6 +105,9 @@ const BaseLayout = props => {
                     }} />
                     <PrivateRoute exact path="/users/classes/:classId" render={props => {
                         return <UserClassDetail {...props} user={user} />
+                    }} />
+                    <Route render={props => {
+                        return <NotFound user={user} {...props} />
                     }} />
                 </Switch>
 

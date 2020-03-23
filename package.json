@@ -15,14 +15,21 @@
     "axios": "^0.19.2",
     "material-table": "^1.57.2",
     "moment": "^2.24.0",
+    "pusher-js": "^5.1.1",
     "react": "^16.13.0",
     "react-avatar-edit": "^0.8.3",
     "react-dom": "^16.13.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "react-swipeable-views": "^0.13.9",
     "redux": "^4.0.5",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "sails.io.js": "^1.2.1",
+    "simple-peer": "^9.6.2",
+    "socket.io-client": "^2.3.0",
+    "uifx": "^2.0.7",
+    "wrtc": "^0.4.4"
   },
   "scripts": {
     "start": "react-scripts start",

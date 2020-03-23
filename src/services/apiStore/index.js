@@ -85,5 +85,14 @@ export default {
     },
     actDeleteComment: data => {
         store.dispatch({ type: 'DELETE_COMMENT', data })
+    },
+    actSetMeeting: data => {
+        store.dispatch({ type: 'SET_MEETING', data })
+    },
+    actCloseMeeting: data => {
+        store.dispatch({ type: 'CLOSE_MEETING' })
+    },
+    actUpdateMeeting: data => {
+        store.dispatch({ type: 'UPDATE_MEETING', data })
     }
 }
