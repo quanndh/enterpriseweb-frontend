@@ -76,5 +76,26 @@ export default {
     getOnlineUser: data => {
         return request('/api/meeting/online', data, 'POST')
     },
+    userChangePassword: data => {
+        return request('/api/user/change-password', data, 'PATCH')
+    },
+    getMessageCount: data => {
+        return request('/api/report/count-message', data, 'POST')
+    },
+    getBlogCount: data => {
+        return request('/api/report/blog-count', data, 'POST')
+    },
+    getNewUserCount: data => {
+        return request('/api/report/new-user-count', data, 'POST')
+    },
+    getMeetingTime: data => {
+        return request('/api/report/meeting-time', data, 'POST')
+    },
+    getOverallStat: data => {
+        return request('/api/report/overall-stat', data, 'POST')
+    },
+    getUnactiveStudent: data => {
+        return request('/api/report/get-unactive-student', data, 'POST')
+    }
 
 }

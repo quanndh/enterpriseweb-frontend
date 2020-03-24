@@ -20,6 +20,7 @@ import utils from '../services/utils';
 import UserClass from './UserClass';
 import UserClassDetail from './UserClassDetail';
 import NotFound from './NotFound';
+import Statistic from './Statistic';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -105,6 +106,9 @@ const BaseLayout = props => {
                     }} />
                     <PrivateRoute exact path="/users/classes/:classId" render={props => {
                         return <UserClassDetail {...props} user={user} />
+                    }} />
+                    <PrivateRoute exact path="/statistic" render={props => {
+                        return <Statistic {...props} user={user} />
                     }} />
                     <Route render={props => {
                         return <NotFound user={user} {...props} />

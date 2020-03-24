@@ -108,7 +108,7 @@ class ChatBox extends Component {
                                     <h5 style={{ color: 'grey' }}>{moment(msg.createdAt).format('hh:mm A')}</h5>
                                 </div>
                             </div>
-                        </div>|
+                        </div>
                         <p>{msg.content}</p>
                     </div>
                 </div>

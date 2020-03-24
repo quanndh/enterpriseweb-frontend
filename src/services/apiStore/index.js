@@ -94,5 +94,5 @@ export default {
     },
     actUpdateMeeting: data => {
         store.dispatch({ type: 'UPDATE_MEETING', data })
-    }
+    },
 }

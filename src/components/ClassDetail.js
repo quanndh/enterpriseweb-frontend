@@ -122,7 +122,7 @@ const ClassDetail = props => {
                     <div style={{ marginBottom: 20 }}>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
                             CLASS NAME
-                    </Typography>
+                        </Typography>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
                             {classDetail.title}
                         </Typography>
@@ -130,15 +130,31 @@ const ClassDetail = props => {
                     <div style={{ marginBottom: 20 }}>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
                             DESCRIPTION
-                    </Typography>
+                        </Typography>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
                             {classDetail.desc}
+                        </Typography>
+                    </div>
+                    <div style={{ marginBottom: 20 }}>
+                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                            TOTAL BLOG
+                        </Typography>
+                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                            {classDetail.blogs}
+                        </Typography>
+                    </div>
+                    <div style={{ marginBottom: 20 }}>
+                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                            TOTAL MEETING
+                        </Typography>
+                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                            {classDetail.meetings}
                         </Typography>
                     </div>
                     <div style={{ marginBottom: 20, width: "100%" }}>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
                             TUTOR
-                    </Typography>
+                        </Typography>
                         {
                             editing ? (
                                 <React.Fragment >

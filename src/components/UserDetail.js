@@ -43,9 +43,14 @@ const UserDetail = props => {
                             </Typography>
                         </div>
                     </div>
-                    {/* <IconButton color="primary" aria-label="add">
-                        <EditIcon />
-                    </IconButton> */}
+                    <div>
+                        <Typography variant="h6" style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                            TOTAL MESSAGE
+                        </Typography>
+                        <Typography variant="h6" >
+                            {user.messages}
+                        </Typography>
+                    </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: utils.isMobile() ? "column" : "row", justifyContent: 'space-between', width: "auto", height: "auto" }}>
                     <div>

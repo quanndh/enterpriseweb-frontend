@@ -652,7 +652,34 @@ a:hover{
 	z-index: 10;
 }
 
+.statistic-card{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	/* padding-left: 30px; */
+	/* padding-top: 16px; */
+	padding-right: 60px;
+	height: 120px;
+}
 
+.statistic-logo{
+	height: 100%;
+	width: 30%;
+	color: white;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+
+.statistic-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 50%;
+	font-weight: 500;
+	font-size: 28px;
+	text-align: right;
+}
 
 @media screen and (max-width: 1050px){
 	.container{

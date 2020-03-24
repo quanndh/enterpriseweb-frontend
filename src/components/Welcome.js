@@ -12,14 +12,14 @@ const Welcome = props => {
     let time;
 
     if (6 <= moment().hour() && moment().hour() <= 12) {
-        time = "buổi sáng"
+        time = "morning"
     }
     else if (12 < moment().hour() && moment().hour() < 19) {
-        time = "buổi chiều"
-    } else time = "buổi tối"
+        time = "afternoon"
+    } else time = "evening"
 
     let weatherApiKey = "700b07d550ba955390f2859e03135585"
-    let weatherUrl = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${weatherApiKey}/${latitude},${longitude}?exclude=daily,hourly&lang=vi&units=si`
+    let weatherUrl = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${weatherApiKey}/${latitude},${longitude}?exclude=daily,hourly&lang=en&units=si`
 
     useEffect(() => {
         const getWeather = async () => {
@@ -39,13 +39,13 @@ const Welcome = props => {
         <div className="welcome-wrap" style={{}}>
             <main>
                 <section className="greeting">
-                    <div className="username">Chào {time} {user.fullName}</div>
+                    <div className="username">Good {time} {user.fullName}</div>
                     <div className="date">{moment().locale('vi').format("dddd, MMMM Do YYYY, h:mm:ss a")}</div>
                 </section>
                 <div className="current">
                     <div className="temp">{Math.floor(weather.temperature ? weather.temperature : 20)}<span>°c</span></div>
                     <div className="weather">{weather.summary && weather.summary.toUpperCase()}</div>
-                    <div className="hi-low">Độ ẩm: {weather.humidity ? weather.humidity * 100 : 70}%</div>
+                    <div className="hi-low">Humidity: {weather.humidity ? weather.humidity * 100 : 70}%</div>
                 </div>
             </main>
         </div>

@@ -17,6 +17,13 @@ import { post } from 'axios'
 import dataService from '../network/dataService';
 import { LinearProgress } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
 
 const getShortName = name => {
     let words = name.split(" ")
@@ -61,6 +68,11 @@ const useStyles = makeStyles(theme => ({
         },
     },
 }))
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+});
+
 const PersonalDrawer = props => {
     let { user } = props;
 
@@ -72,6 +84,9 @@ const PersonalDrawer = props => {
     const [preview, setPreview] = useState(null)
     const [image, setImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
+    const [openChangePassword, setOpenChangePassword] = useState(false)
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("")
 
     const handleClose = () => {
         togglePersonal()
@@ -117,8 +132,6 @@ const PersonalDrawer = props => {
             return
         }
 
-        console.log(rs.data, 111)
-
         let avatar = rs.data.data.url;
         rs = await dataService.updateUser({ id: user.id, avatar })
         if (rs.code === 0) {
@@ -131,8 +144,68 @@ const PersonalDrawer = props => {
         toggleEditing()
     }
 
+    const handleClickOpen = () => {
+        setOpenChangePassword(true);
+    };
+
+    const handleClosePassword = () => {
+        setNewPassword("")
+        setConfirmPassword("")
+        setOpenChangePassword(false);
+    };
+
+    const handleChangePassword = async () => {
+        setIsLoading(true)
+        let rs = await dataService.userChangePassword({ newPassword, confirmPassword })
+        setIsLoading(false)
+        apiStore.showUi(rs.message, rs.code)
+        handleClosePassword()
+    }
+
     return (
         <React.Fragment>
+            <Dialog
+                open={openChangePassword}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleClosePassword}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle id="alert-dialog-slide-title">{"Fill in to change your password"}</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus={true}
+                        margin="dense"
+                        label="New Password"
+                        type="password"
+                        fullWidth
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                    <TextField
+                        autoFocus={true}
+                        margin="dense"
+                        label="Confirm your Password"
+                        type="password"
+                        fullWidth
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClosePassword} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleChangePassword}
+                        color="primary"
+                        disabled={newPassword === "" || confirmPassword === "" ? true : false}
+                    >
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Drawer className={classes.drawer}
                 variant="persistent"
                 classes={{
@@ -211,6 +284,11 @@ const PersonalDrawer = props => {
                             <Typography variant="h5" style={{ color: "grey", fontWeight: 540, marginBottom: 20 }} >
                                 Contact: {user.phone}
                             </Typography>
+                            <Button color="primary" variant="contained" onClick={handleClickOpen}>
+                                <Typography variant="h6" style={{ color: "white", fontWeight: 540 }} >
+                                    Change your password
+                                </Typography>
+                            </Button>
                         </div>
 
                     </div>
@@ -225,7 +303,7 @@ const PersonalDrawer = props => {
 
                 </div>
             </Drawer >
-        </React.Fragment>
+        </React.Fragment >
     )
 }
 
