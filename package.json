@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
+    "kurento-utils": "^6.13.1",
     "material-table": "^1.57.2",
     "moment": "^2.24.0",
     "pusher-js": "^5.1.1",
@@ -31,6 +32,7 @@
     "simple-peer": "^9.6.2",
     "socket.io-client": "^2.3.0",
     "uifx": "^2.0.7",
+    "webrtc-adapter": "^7.5.1",
     "wrtc": "^0.4.4"
   },
   "scripts": {

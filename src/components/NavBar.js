@@ -212,12 +212,15 @@ const NavBar = props => {
                                         <ListItemText primary={`Class Management`} />
                                     </Link>
                                 </ListItem>
-                                <ListItem button key={'Statistic'} onClick={handleDrawerClose}>
-                                    <Link to="/statistic" className={classes.link}>
-                                        <ListItemIcon><EqualizerIcon /></ListItemIcon>
-                                        <ListItemText primary={`Statistic`} />
-                                    </Link>
-                                </ListItem>
+                                {
+                                    user.role === 1 ? (<ListItem button key={'Statistic'} onClick={handleDrawerClose}>
+                                        <Link to="/statistic" className={classes.link}>
+                                            <ListItemIcon><EqualizerIcon /></ListItemIcon>
+                                            <ListItemText primary={`Statistic`} />
+                                        </Link>
+                                    </ListItem>) : null
+                                }
+
                             </React.Fragment>
                         ) : (
                                 <React.Fragment>

@@ -95,4 +95,10 @@ export default {
     actUpdateMeeting: data => {
         store.dispatch({ type: 'UPDATE_MEETING', data })
     },
+    actSetInitiator: data => {
+        store.dispatch({ type: 'SET_INITIATOR', data })
+    },
+    actSetPeer: data => {
+        store.dispatch({ type: 'SET_PEER', data })
+    }
 }

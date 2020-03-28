@@ -13,7 +13,6 @@ import moment from 'moment';
 import Avatar from '@material-ui/core/Avatar';
 import UIfx from 'uifx';
 import msgSound from '../assets/sound/fbsound.mp3';
-import { connect } from 'react-redux'
 
 const msgNoti = new UIfx(msgSound);
 
@@ -94,7 +93,6 @@ class ChatBox extends Component {
     render() {
         let { message, value, content } = this.state;
         let { online } = this.props;
-        console.log(online)
 
         let displayMessage = message.length ? message.map(msg => {
             return (
@@ -114,6 +112,15 @@ class ChatBox extends Component {
                 </div>
             )
         }) : null
+        let displayOnline = online && online.length ? online.map(user => {
+            return (
+                <div key={user.id} style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+                    {user.avatar ? <Avatar alt="avatar" src={user.avatar} style={{ width: utils.isMobile() ? 36 : 45, marginRight: utils.isMobile() ? 12 : 28, height: utils.isMobile() ? 36 : 45 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 36 : 45, height: utils.isMobile() ? 36 : 45, marginRight: utils.isMobile() ? 12 : 28 }} >{getShortName(user.fullName)}</Avatar>}
+                    <h4>{user.fullName}</h4>
+                </div>
+            )
+        }) : null
+
         return (
             <div style={{
                 height: utils.isMobile() ? "77%" : "100%", overflow: utils.isMobile() ? "none" : 'hidden', width: '100%'
@@ -126,7 +133,7 @@ class ChatBox extends Component {
                     textColor="primary"
                 >
                     <Tab label="Chat" icon={<ChatIcon />} />
-                    <Tab label="People" icon={<PeopleAltIcon />} />
+                    <Tab label={`People (${online.length})`} icon={<PeopleAltIcon />} />
                 </Tabs >
                 {
                     value === 0 ? (
@@ -151,8 +158,8 @@ class ChatBox extends Component {
 
                         </div>
                     ) : (
-                            <div >
-                                aas
+                            <div style={{ padding: 20 }}>
+                                {displayOnline}
                             </div>
                         )
                 }
@@ -161,10 +168,4 @@ class ChatBox extends Component {
     }
 }
 
-
-const mapStateToProps = state => {
-    return {
-        online: state.classReducer.meeting.participants
-    }
-}
-export default connect(mapStateToProps)(ChatBox);
+export default ChatBox;

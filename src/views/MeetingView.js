@@ -44,7 +44,6 @@ class MeetingView extends Component {
         this.getOnlineUser()
         io.socket.on('join-meeting', event => {
             if (Number(event.data.id) === Number(this.props.match.params.meetingId)) {
-                console.log(event.data.participants)
                 this.setState({ online: event.data.participants, newUser: event.newUser, open: true, type: 'join' })
                 setTimeout(() => {
                     this.setState({ open: false, newUser: {} })
@@ -54,7 +53,6 @@ class MeetingView extends Component {
         })
         io.socket.on('leave-meeting', event => {
             if (Number(event.data.id) === Number(this.props.match.params.meetingId)) {
-                console.log(event.data.participants)
                 this.setState({ online: event.data.participants, newUser: event.newUser, open: true, type: 'leave' })
                 setTimeout(() => {
                     this.setState({ open: false, newUser: {} })
@@ -76,6 +74,14 @@ class MeetingView extends Component {
                 }
             })
         })
+        if (window.performance) {
+            console.info("window.performance works fine on this browser");
+        }
+        if (performance.navigation.type === 1) {
+            window.location.href = '/users/classes'
+        } else {
+            console.info("This page is not reloaded");
+        }
     }
 
     handleClose = () => {
@@ -85,8 +91,7 @@ class MeetingView extends Component {
     render() {
         let { meetingId } = this.props.match.params;
         let { user } = this.props;
-        let { newUser, type } = this.state;
-        console.log(this.state.online, 111)
+        let { newUser, type, online } = this.state;
         return (
             <Grid container className="meeting" style={{ height: '100%' }}>
                 <Snackbar
@@ -108,10 +113,10 @@ class MeetingView extends Component {
                     </Alert>
                 </Snackbar>
                 <Grid item xs={12} md={6} lg={9} style={{ backgroundColor: 'black', height: utils.isMobile() ? '40vh' : '100vh' }}>
-                    <CameraGrid meetingId={meetingId} user={user} />
+                    <CameraGrid meetingId={meetingId} user={user} online={online} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={3} style={{ height: utils.isMobile() ? '60vh' : '100vh' }}>
-                    <ChatBox online={this.state.online} meetingId={meetingId} user={user} style={{ height: '100%' }} />
+                    <ChatBox online={online.length ? online : []} meetingId={meetingId} user={user} style={{ height: '100%' }} />
                 </Grid>
             </Grid >
         )

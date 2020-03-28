@@ -96,6 +96,9 @@ export default {
     },
     getUnactiveStudent: data => {
         return request('/api/report/get-unactive-student', data, 'POST')
+    },
+    getPeers: data => {
+        return request('/api/calling/get-peer', data, 'POST')
     }
 
 }
