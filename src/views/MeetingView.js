@@ -113,7 +113,7 @@ class MeetingView extends Component {
                     </Alert>
                 </Snackbar>
                 <Grid item xs={12} md={6} lg={9} style={{ backgroundColor: 'black', height: utils.isMobile() ? '40vh' : '100vh' }}>
-                    <CameraGrid meetingId={meetingId} user={user} online={online} />
+                    {/* <CameraGrid meetingId={meetingId} user={user} online={online} /> */}
                 </Grid>
                 <Grid item xs={12} md={6} lg={3} style={{ height: utils.isMobile() ? '60vh' : '100vh' }}>
                     <ChatBox online={online.length ? online : []} meetingId={meetingId} user={user} style={{ height: '100%' }} />

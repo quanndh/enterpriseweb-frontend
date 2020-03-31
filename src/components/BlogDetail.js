@@ -17,7 +17,34 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import CloseIcon from '@material-ui/icons/Close';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import excelLogo from '../assets/img/excel.png'
+import wordLogo from '../assets/img/word.png';
+import ppLogo from '../assets/img/ppt.png'
+import fileLogo from '../assets/img/file.png'
 
+// const wordLogo = 'https://banner2.cleanpng.com/20180425/zye/kisspng-microsoft-word-microsoft-excel-microsoft-office-20-5ae0816fc0bb38.1165225915246626397894.jpg';
+// const excelLogo = 'https://banner2.cleanpng.com/20180418/jde/kisspng-microsoft-excel-training-computer-software-microso-excel-5ad7d9f121bed2.0123007315240954731382.jpg';
+// const ppLogo = 'https://mpng.pngfly.com/20180401/aiw/kisspng-microsoft-powerpoint-presentation-slide-slide-show-ppt-5ac0913364f1f5.4931388215225695234135.jpg';
+// const fileLogo = "https://cdn3.iconfinder.com/data/icons/files-folders-line/100/copy-512.png";
+
+const getFileLogo = (fileName) => {
+    if (fileName.includes('docx') || fileName.includes('doc')) {
+        return wordLogo;
+    } else if (fileName.includes('xlsx')) {
+        return excelLogo;
+    } else if (fileName.includes('pptx') || fileName.includes('ppt')) {
+        return ppLogo;
+    } else return fileLogo
+}
+
+const handleFileName = (fileName) => {
+    if (fileName.length > 18) {
+        fileName = fileName.slice(0, 18) + '...'
+    }
+    return fileName;
+}
 
 const getShortName = name => {
     let words = name.split(" ")
@@ -115,6 +142,18 @@ const BlogDetail = props => {
         }, 300)
     }
 
+    const image = detail && detail.file && detail.file.length ? detail.file.filter(file => file.fileType.includes('image')) : []
+    const displayImage = image.length ? (
+        <Carousel swipeable={true} dynamicHeight={true} showThumbs={false}>
+            {image.map(img => {
+                return (
+                    <div key={img.id}>
+                        <img style={utils.isMobile() ? {} : { width: 500, height: 500 }} src={img.fullPath} alt="" />
+                    </div>
+                )
+            })}
+        </Carousel>
+    ) : null
     return (
         <React.Fragment>
             <Dialog
@@ -172,16 +211,30 @@ const BlogDetail = props => {
                         {
                             detail.file.length ? detail.file.map(file => {
                                 return (
-                                    <React.Fragment key={`file-${file.id}`}>
-                                        <Paper onClick={() => handleDownloadFile(file.fullPath, file.fileName)} className="file" elevation={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', borderRadius: 12, height: 50, padding: 14 }}>
-                                            <h3>{file.fileName}</h3>
-                                        </Paper>
-                                    </React.Fragment>
-
+                                    !file.fileType.includes('image') ? (
+                                        <div
+                                            key={`file-${file.id}`}
+                                            onClick={() => handleDownloadFile(file.fullPath, file.fileName)}
+                                            className="file shadow"
+                                            style={{ width: !utils.isMobile() ? '49%' : '100%', borderRadius: 6, height: 100 }}
+                                        >
+                                            <div style={{ display: 'flex', height: '100%' }}>
+                                                <div style={{ height: '100%', width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <img style={{ height: 50, width: 50, background: 'transparent' }} src={getFileLogo(file.fileName)} alt="" />
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', width: '75%' }}>
+                                                    <h3>{handleFileName(file.fileName)}</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : null
                                 )
                             }) : null
                         }
                     </div>
+                    {
+                        displayImage
+                    }
                 </div>
                 <Divider />
                 <div style={{}}>
@@ -277,7 +330,7 @@ const BlogDetail = props => {
                 </div>
                 {loading && <LinearProgress style={{ width: "99%", margin: '0 auto' }} />}
             </Paper >
-        </React.Fragment>
+        </React.Fragment >
 
     )
 }

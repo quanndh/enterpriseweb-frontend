@@ -13,7 +13,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import InsertLinkIcon from '@material-ui/icons/InsertLink';
 import { post } from 'axios'
-import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Tooltip from '@material-ui/core/Tooltip';
 import NearMeIcon from '@material-ui/icons/NearMe';
@@ -27,6 +26,27 @@ import Slide from '@material-ui/core/Slide';
 import moment from 'moment';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import io from '../services/socket/index'
+import excelLogo from '../assets/img/excel.png'
+import wordLogo from '../assets/img/word.png';
+import ppLogo from '../assets/img/ppt.png'
+import fileLogo from '../assets/img/file.png'
+
+const getFileLogo = (fileName) => {
+    if (fileName.includes('docx') || fileName.includes('doc')) {
+        return wordLogo;
+    } else if (fileName.includes('xlsx')) {
+        return excelLogo;
+    } else if (fileName.includes('pptx') || fileName.includes('ppt')) {
+        return ppLogo;
+    } else return fileLogo
+}
+
+const handleFileName = (fileName) => {
+    if (fileName.length > 18) {
+        fileName = fileName.slice(0, 18) + '...'
+    }
+    return fileName;
+}
 
 const getShortName = name => {
     let words = name.split(" ")
@@ -43,7 +63,7 @@ const BlogForm = props => {
     const [content, setContent] = useState("");
 
     const [uploadedFileServerName, setUploadedFileServerName] = useState([])
-    const [uploadedFileName, setUploadedFileName] = useState([])
+    const [uploadedFile, setUploadedFile] = useState([])
 
     const handleUpFile = async e => {
         setLoading(true)
@@ -69,22 +89,31 @@ const BlogForm = props => {
         }
 
         let tempFileServerName = [...uploadedFileServerName];
-        let tempFileName = [...uploadedFileName]
+        let tempFile = [...uploadedFile]
         tempFileServerName.push(rs.data.data[0].serverFileName)
-        tempFileName.push(rs.data.data[0].fileName)
+        tempFile.push(rs.data.data[0])
+        console.log(rs.data.data, 1111)
         setUploadedFileServerName(tempFileServerName)
-        setUploadedFileName(tempFileName)
+        setUploadedFile(tempFile)
 
         setLoading(false)
     }
 
+    const handleDownloadFile = async (fullPath, fileName) => {
+        setLoading(true)
+        setTimeout(() => {
+            window.open(fullPath)
+            setLoading(false)
+        }, 300)
+    }
+
     const handleRemoveFile = index => {
         let tempFileServerName = [...uploadedFileServerName];
-        let tempFileName = [...uploadedFileName]
+        let tempFile = [...uploadedFile]
         tempFileServerName.splice(index, 1)
-        tempFileName.splice(index, 1)
+        tempFile.splice(index, 1)
         setUploadedFileServerName(tempFileServerName)
-        setUploadedFileName(tempFileName)
+        setUploadedFile(tempFile)
     }
 
     const handleCreatePost = async () => {
@@ -93,7 +122,7 @@ const BlogForm = props => {
         setLoading(false)
         if (rs.code === 0) {
             apiStore.actAddNewPost(rs.data)
-            setUploadedFileName([])
+            setUploadedFile([])
             setUploadedFileServerName([])
             setContent("")
             handleCloseForm()
@@ -118,16 +147,45 @@ const BlogForm = props => {
 
             <div style={{ height: '100%', display: 'flex', flexWrap: 'wrap' }}>
                 {
-                    uploadedFileName.length ? uploadedFileName.map((file, index) => {
+                    uploadedFile.length ? uploadedFile.map((file, index) => {
                         return (
-                            <Paper className="file" elevation={3} key={`uploadFile-${index}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', borderRadius: 12, height: 50, padding: 14 }}>
-                                <h3>{file}</h3>
-                                <Tooltip title="Remove">
-                                    <IconButton onClick={() => handleRemoveFile(index)}>
-                                        <CloseIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Paper>
+                            !file.fileType.includes('image') ? (
+                                <div
+                                    key={`file-${file.id}`}
+                                    className="file shadow"
+                                    style={{ width: !utils.isMobile() ? '49%' : '100%', borderRadius: 6, height: 100, position: 'relative' }}
+                                >
+                                    <div style={{ display: 'flex', height: '100%' }} onClick={() => handleDownloadFile(file.fullPath, file.fileName)}>
+                                        <div style={{ height: '100%', width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <img style={{ height: 50, width: 50 }} src={getFileLogo(file.fileName)} alt="" />
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', width: '75%' }}>
+                                            <h3>{handleFileName(file.fileName)}</h3>
+                                        </div>
+                                    </div>
+                                    <Tooltip title="Remove" style={{ position: 'absolute', top: 8, right: 8 }}>
+                                        <CloseIcon onClick={() => handleRemoveFile(index)} />
+                                    </Tooltip>
+                                </div>
+
+                            ) : null
+                        )
+                    }) : null
+                }
+            </div>
+
+            <div style={{ height: '100%', display: 'flex', flexWrap: 'wrap' }}>
+                {
+                    uploadedFile.length ? uploadedFile.map((file, index) => {
+                        return (
+                            file.fileType.includes('image') ? (
+                                <div key={file.id} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', position: 'relative' }}>
+                                    <img onClick={() => { handleDownloadFile(file.fullPath, file.fileName) }} src={file.fullPath} alt="" style={{ width: 100, height: 100, margin: 10 }} />
+                                    <Tooltip title="Remove" style={{ position: 'absolute', right: 10, top: 10 }}>
+                                        <CloseIcon onClick={() => handleRemoveFile(index)} color="secondary" />
+                                    </Tooltip>
+                                </div>
+                            ) : null
                         )
                     }) : null
                 }
@@ -162,7 +220,7 @@ const BlogForm = props => {
                 </Button>
                 </div>
             </div>
-        </div>
+        </div >
 
     )
 }

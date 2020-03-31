@@ -99,6 +99,9 @@ export default {
     },
     getPeers: data => {
         return request('/api/calling/get-peer', data, 'POST')
+    },
+    sendResetMail: data => {
+        return request('/api/user/send-reset-mail', data, 'POST')
     }
 
 }

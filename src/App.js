@@ -8,6 +8,7 @@ import { connect, useSelector } from "react-redux";
 import MessageUI from './components/MessageUI';
 import apiStore from './services/apiStore';
 import MeetingView from './views/MeetingView';
+import ResetPassword from './views/ResetPassword';
 
 const PrivateRoute = (props) => {
   let userReducer = useSelector(state => state.userReducer);
@@ -42,6 +43,9 @@ function App(props) {
           <Switch >
             <Route path="/login" exact render={props => {
               return <LoginForm {...props} />
+            }} />
+            <Route path='/reset/:token' render={props => {
+              return <ResetPassword {...props} />
             }} />
             <PrivateRoute exact path="/meeting/:meetingId" render={props => {
               return <MeetingView {...props} user={user} />
