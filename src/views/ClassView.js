@@ -47,16 +47,16 @@ const ClassView = props => {
     let { classList, user } = props;
 
     let columns = [
-        { title: 'Pair Title', field: 'title' },
-        { title: 'Description', field: 'desc' },
-        { title: 'Tutor', field: 'tutor.fullName', readonly: true },
-        { title: 'Student', field: 'students[0].fullName', readonly: true },
-        { title: 'Status', field: 'isActive', lookup: { 0: 'Inactive', 1: 'Active' } }
+        { title: 'Tutor', field: 'fullName' },
+        { title: 'Email', field: 'email' },
+        { title: 'Phone', field: 'phone' },
+        { title: 'Number of Students', field: 'students.length' },
+        // { title: 'Status', field: 'isActive', lookup: { 0: 'Inactive', 1: 'Active' } }
     ]
     let options = {
         exportButton: true,
         emptyRowsWhenPaging: true,
-        exportFileName: "Class_List",
+        exportFileName: "Tutor_List",
         headerStyle: { fontSize: 18, fontWeight: 600 },
         searchFieldAlignment: 'left',
         draggable: true,
@@ -65,30 +65,30 @@ const ClassView = props => {
     let editable;
     if (user.role === 1) {
         editable = {
-            onRowAdd: newData =>
-                new Promise(async resolve => {
-                    await handleAddClass(newData)
-                    resolve()
-                }),
-            onRowUpdate: (newData, oldData) =>
-                new Promise(async resolve => {
-                    await handleUpdateClass(newData)
-                    resolve()
-                }),
+            // onRowAdd: newData =>
+            //     new Promise(async resolve => {
+            //         await handleAddClass(newData)
+            //         resolve()
+            //     }),
+            // onRowUpdate: (newData, oldData) =>
+            //     new Promise(async resolve => {
+            //         await handleUpdateClass(newData)
+            //         resolve()
+            //     }),
         }
     }
     if (user.role === 2) {
         editable = {
-            onRowAdd: newData =>
-                new Promise(async resolve => {
-                    await handleAddClass(newData)
-                    resolve()
-                }),
-            onRowUpdate: (newData, oldData) =>
-                new Promise(async resolve => {
-                    await handleUpdateClass(newData)
-                    resolve()
-                }),
+            // onRowAdd: newData =>
+            //     new Promise(async resolve => {
+            //         await handleAddClass(newData)
+            //         resolve()
+            //     }),
+            // onRowUpdate: (newData, oldData) =>
+            //     new Promise(async resolve => {
+            //         await handleUpdateClass(newData)
+            //         resolve()
+            //     }),
         }
     }
 
@@ -98,7 +98,7 @@ const ClassView = props => {
 
     const getClassList = async () => {
         setIsLoading(true)
-        let rs = await dataService.getClassList({})
+        let rs = await dataService.getAvailableTutor({})
         if (rs.code === 0) {
             apiStore.actSetListClass(rs.data)
         } else {
@@ -127,22 +127,22 @@ const ClassView = props => {
         }, speed)
     }
 
-    const handleAddClass = async (newClass) => {
-        setIsLoading(true)
-        let rs = await dataService.createClass(newClass);
-        if (rs.code === 0) apiStore.actAddClass(rs.data)
-        apiStore.showUi(rs.message, rs.code)
-        setIsLoading(false)
-    }
+    // const handleAddClass = async (newClass) => {
+    //     setIsLoading(true)
+    //     let rs = await dataService.createClass(newClass);
+    //     if (rs.code === 0) apiStore.actAddClass(rs.data)
+    //     apiStore.showUi(rs.message, rs.code)
+    //     setIsLoading(false)
+    // }
 
-    const handleUpdateClass = async newClass => {
-        setIsLoading(true)
-        let rs = await dataService.changeClassState({ classId: newClass.id, title: newClass.title, isActive: newClass.isActive, desc: newClass.desc })
-        if (rs.code === 0) apiStore.actUpdateClass(rs.data)
-        apiStore.showUi(rs.message, rs.code)
-        setIsLoading(false)
+    // const handleUpdateClass = async newClass => {
+    //     setIsLoading(true)
+    //     let rs = await dataService.changeClassState({ classId: newClass.id, title: newClass.title, isActive: newClass.isActive, desc: newClass.desc })
+    //     if (rs.code === 0) apiStore.actUpdateClass(rs.data)
+    //     apiStore.showUi(rs.message, rs.code)
+    //     setIsLoading(false)
 
-    }
+    // }
 
     const handleSelectClass = (event, data) => {
         let tableHeight = event.target.parentNode.parentNode.parentNode.clientHeight
@@ -190,7 +190,7 @@ const ClassView = props => {
                 Object.keys(selectedClassData).length > 0 && (
                     <div style={{ marginTop: 40 }}>
                         <Typography variant="h6" style={{ fontWeight: 540, fontStyle: "italic", marginBottom: 8 }} >
-                            PAIR DETAIL
+                            ASSIGN DETAIL
                          </Typography>
 
                         <Paper style={{ padding: "24px 32px", width: "100%" }} elevation={6}>

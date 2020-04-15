@@ -15,7 +15,7 @@ const getShortName = name => {
 }
 
 const MultiInput = props => {
-    let { classId, onSelectStudent, triggerAdd } = props;
+    let { onSelectStudent, triggerAdd } = props;
 
     const [isLoading, setIsLoading] = useState(false)
     const [searchString, setSearchString] = useState("")
@@ -34,7 +34,7 @@ const MultiInput = props => {
         await setSearchString(e.target.value)
         setTimeout(async () => {
             setIsLoading(true)
-            let rs = await dataService.getListStudent({ searchString: searchString, classId })
+            let rs = await dataService.getListStudent({ searchString: searchString })
             if (rs.code !== 0) apiStore.showUi(rs.message, rs.code)
             else {
                 rs.data = rs.data.filter(u => !tempList.includes(u.id))

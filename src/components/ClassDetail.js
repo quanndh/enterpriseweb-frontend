@@ -50,15 +50,11 @@ const ClassDetail = props => {
 
     const [selectedStudents, setSelectedStudents] = useState([]);
     const [triggerAdd, setTriggerAdd] = useState(false);
-    const [editing, setEditing] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [searchString, setSearchString] = useState("")
-    const [data, setData] = useState([])
-    const [selectedTutor, setSelectedTutor] = useState({})
 
     const handleRemoveStudentFromClass = async (id) => {
         setIsLoading(true)
-        let rs = await dataService.removeStudentFromClass({ classId: classDetail.id, studentId: id })
+        let rs = await dataService.removeStudentFromClass({ tutorId: classDetail.id, studentId: id })
         setIsLoading(false)
         apiStore.showUi(rs.message, rs.code)
         if (rs.code === 0) {
@@ -77,40 +73,12 @@ const ClassDetail = props => {
     const handleAddStudent = async () => {
         setIsLoading(true)
         let students = selectedStudents.map(s => { return s.id })
-        let rs = await dataService.assignToClass({ classId: classDetail.id, students })
+        let rs = await dataService.assignToClass({ tutorId: classDetail.id, students })
         setTriggerAdd(true)
         setSelectedStudents([])
         setIsLoading(false)
         apiStore.showUi(rs.message, rs.code)
         apiStore.actAddStudentToClass({ classId: classDetail.id, students: selectedStudents })
-    }
-
-    const handleSearchTutor = async (e) => {
-        await setSearchString(e.target.value)
-        setTimeout(async () => {
-            setIsLoading(true)
-            let rs = await dataService.getAvailableTutor({ tutorName: searchString, classId: classDetail.id })
-            if (rs.code !== 0) apiStore.showUi(rs.message, rs.code)
-            else setData(rs.data)
-            setIsLoading(false)
-        }, 300)
-    }
-
-    const handleChangeInput = (e, value) => {
-        setSelectedTutor(value)
-    }
-
-    const handleUpdateTutor = async () => {
-        setIsLoading(true)
-        let rs = await dataService.assignToClass({ classId: classDetail.id, tutorId: selectedTutor.id })
-        setIsLoading(false)
-        apiStore.showUi(rs.message, rs.code);
-        if (rs.code === 0) {
-            apiStore.actUpdateClassTutor({ classId: classDetail.id, tutor: selectedTutor })
-            setEditing(false)
-            setSelectedTutor({})
-            setSearchString("")
-        }
     }
 
     return (
@@ -119,125 +87,70 @@ const ClassDetail = props => {
 
             <Grid container spacing={utils.isMobile() ? 1 : 8}>
                 <Grid item md={6} style={utils.isMobile() ? { width: "100%" } : { display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-                    <div style={{ marginBottom: 20 }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            Pair objective
+                    <div>
+                        <div style={{ marginBottom: 20 }}>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                                TUTOR
                         </Typography>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
-                            {classDetail.title}
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                                {classDetail.fullName}
+                            </Typography>
+                        </div>
+                        <div style={{ marginBottom: 20 }}>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                                EMAIL
                         </Typography>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                                {classDetail.email}
+                            </Typography>
+                        </div>
                     </div>
-                    <div style={{ marginBottom: 20 }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            DESCRIPTION
+                    <div>
+                        <div style={{ marginBottom: 20 }}>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                                PHONE
                         </Typography>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
-                            {classDetail.desc}
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                                {classDetail.phone}
+                            </Typography>
+                        </div>
+                        <div style={{ marginBottom: 20 }}>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                                TOTAL MESSAGE
                         </Typography>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                                {classDetail.messages}
+                            </Typography>
+                        </div>
                     </div>
-                    <div style={{ marginBottom: 20 }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            TOTAL BLOG
+                    <div>
+                        <div style={{ marginBottom: 20 }}>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                                TOTAL MEETING
                         </Typography>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
-                            {classDetail.blogs}
-                        </Typography>
+                            <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
+                                {classDetail.meetings}
+                            </Typography>
+                        </div>
                     </div>
-                    <div style={{ marginBottom: 20 }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            TOTAL MEETING
-                        </Typography>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
-                            {classDetail.meetings}
-                        </Typography>
-                    </div>
-                    <div style={{ marginBottom: 20, width: "100%" }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            TUTOR
-                        </Typography>
-                        {
-                            editing ? (
-                                <React.Fragment >
-                                    <Autocomplete
-                                        value={selectedTutor}
-                                        onChange={handleChangeInput}
-                                        inputValue={selectedTutor ? selectedTutor.fullName : searchString}
-                                        loading={isLoading}
-                                        id="Tutor"
-                                        options={data}
-                                        getOptionLabel={option => option.fullName}
-                                        renderTags={(value, getTagProps) =>
-                                            value.map((option, index) => (
-                                                <Chip
-                                                    avatar={option.avatar ? <Avatar alt="avatar" src={option.avatar} /> : <Avatar size="large" >{option ? getShortName(option.fullName) : ""}</Avatar>}
-                                                    label={option.fullName}
-                                                    {...getTagProps({ index })}
-                                                />
-                                            ))
-                                        }
-                                        style={{ width: '95%' }}
-                                        renderInput={params => (
-                                            <TextField loading="true" {...params} onChange={handleSearchTutor} label="Tutor name" variant="outlined" placeholder="Tutor name" />
-                                        )}
-                                    />
-                                    <div style={{ display: 'flex' }}>
-                                        <Tooltip title="Done">
-                                            <IconButton onClick={handleUpdateTutor}>
-                                                <DoneIcon loading="true" />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Cancle">
-                                            <IconButton onClick={() => setEditing(false)}>
-                                                <CloseIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
 
-                                </React.Fragment>
-                            ) : (
-                                    <React.Fragment >
-                                        {
-                                            classDetail.tutor ? (
-                                                <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ display: 'flex', alignItems: 'center' }}>
-                                                    {classDetail.tutor && classDetail.tutor.avatar ? <Avatar alt="avatar" src={classDetail.tutor.avatar} style={{ fontSize: utils.isMobile() ? 44 : 50, marginRight: 10 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 44 : 50, height: utils.isMobile() ? 44 : 50, marginRight: 10 }} >{classDetail.tutor ? getShortName(classDetail.tutor.fullName) : ""}</Avatar>}
-                                                    {classDetail.tutor && classDetail.tutor.fullName}
-                                                    <Tooltip title="Edit tutor">
-                                                        <IconButton onClick={() => setEditing(true)}>
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-
-                                                </Typography>
-                                            ) : (
-                                                    <Tooltip title="Add tutor">
-                                                        <IconButton onClick={() => setEditing(true)}>
-                                                            <AddCircleIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-
-                                                )
-                                        }
-
-                                    </React.Fragment>
-                                )
-                        }
-
-                    </div>
-                    <div style={{ width: '100%' }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            ADD STUDENT TO PAIR
-                    </Typography>
-                        <MultiInput triggerAdd={triggerAdd} onSelectStudent={handleSelectStudent} classId={classDetail.id} style={{ width: '100%' }} />
-                        <Button onClick={handleAddStudent} variant="contained" color="primary" style={{ marginTop: 8, color: 'white' }}>
-                            ADD
-                    </Button>
-                    </div>
                 </Grid>
                 <Grid item md={6} style={utils.isMobile() ? { marginTop: 20, width: '100%' } : {}}>
+                    {
+                        classDetail && classDetail.students.length < 10 ? (
+                            <div style={{ width: '100%', marginBottom: 20 }}>
+                                <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
+                                    ASSIGN STUDENT
+                                </Typography>
+                                <MultiInput triggerAdd={triggerAdd} onSelectStudent={handleSelectStudent} style={{ width: '100%' }} />
+                                <Button onClick={handleAddStudent} variant="contained" color="primary" style={{ marginTop: 8, color: 'white' }}>
+                                    Assign
+                                </Button>
+                            </div>
+                        ) : null
+                    }
+
                     <div style={{ marginBottom: 20 }}>
-                        <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            STUDENTS
-                    </Typography>
                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                             {studentList}
                         </div>
