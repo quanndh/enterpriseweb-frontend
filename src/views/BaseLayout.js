@@ -21,6 +21,7 @@ import UserClass from './UserClass';
 import UserClassDetail from './UserClassDetail';
 import NotFound from './NotFound';
 import Statistic from './Statistic';
+import dataService from '../network/dataService';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -88,23 +89,23 @@ const BaseLayout = props => {
             <div
                 className="app-body"
                 style={{
-                    backgroundImage: `${location.pathname === "/" ? `url(${bg})` : "none"}`
+                    backgroundImage: `${location.pathname === "/" && user.role < 2 ? `url(${bg})` : "none"}`
                 }}>
                 <Switch>
                     <PrivateRoute exact path="/" render={props => {
-                        return <Welcome {...props} user={user} />;
+                        return user.role === 4 ? <UserClassDetail {...props} user={user} /> : <Welcome {...props} user={user} />;
                     }} />
 
                     <PrivateRoute exact path="/users" render={props => {
                         return <UserView {...props} user={user} />;
                     }} />
-                    <PrivateRoute exact path="/classes" render={props => {
+                    <PrivateRoute exact path="/pairs" render={props => {
                         return <ClassView {...props} user={user} />
                     }} />
-                    <PrivateRoute exact path="/users/classes" render={props => {
+                    <PrivateRoute exact path="/users/pairs" render={props => {
                         return <UserClass {...props} user={user} />
                     }} />
-                    <PrivateRoute exact path="/users/classes/:classId" render={props => {
+                    <PrivateRoute exact path="/users/pairs/:classId" render={props => {
                         return <UserClassDetail {...props} user={user} />
                     }} />
                     <PrivateRoute exact path="/statistic" render={props => {

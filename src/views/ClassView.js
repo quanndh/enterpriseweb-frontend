@@ -47,10 +47,10 @@ const ClassView = props => {
     let { classList, user } = props;
 
     let columns = [
-        { title: 'Class Name', field: 'title' },
+        { title: 'Pair Title', field: 'title' },
         { title: 'Description', field: 'desc' },
         { title: 'Tutor', field: 'tutor.fullName', readonly: true },
-        { title: 'Number of students', field: 'students.length', readonly: true },
+        { title: 'Student', field: 'students[0].fullName', readonly: true },
         { title: 'Status', field: 'isActive', lookup: { 0: 'Inactive', 1: 'Active' } }
     ]
     let options = {
@@ -152,12 +152,11 @@ const ClassView = props => {
         }, 150)
     }
 
-
     return (
         <React.Fragment>
             <div>
-                <Typography variant="h6" style={{ fontWeight: 540, fontStyle: "italic" }} >
-                    CLASS LIST
+                <Typography variant="h6" style={{ fontWeight: 540, fontStyle: "italic" }}>
+                    LIST OF PAIRS
                 </Typography>
                 {
                     classList ? (
@@ -191,7 +190,7 @@ const ClassView = props => {
                 Object.keys(selectedClassData).length > 0 && (
                     <div style={{ marginTop: 40 }}>
                         <Typography variant="h6" style={{ fontWeight: 540, fontStyle: "italic", marginBottom: 8 }} >
-                            CLASS DETAIL
+                            PAIR DETAIL
                          </Typography>
 
                         <Paper style={{ padding: "24px 32px", width: "100%" }} elevation={6}>

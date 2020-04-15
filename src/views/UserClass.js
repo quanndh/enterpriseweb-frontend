@@ -30,7 +30,7 @@ const UserClass = props => {
 
     let displayClassList = classList.length ? classList.map(c => {
         return (
-            <Link key={c.id} to={`/users/classes/${c.id}`} >
+            <Link key={c.id} to={`/users/pairs/${c.id}`} >
                 <Grid item xs={12} md={6} lg={4} >
                     <ClassCard classDetail={c} />
                 </Grid >

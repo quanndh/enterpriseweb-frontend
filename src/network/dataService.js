@@ -102,6 +102,15 @@ export default {
     },
     sendResetMail: data => {
         return request('/api/user/send-reset-mail', data, 'POST')
+    },
+    getMeetingMessage: data => {
+        return request('/api/meeting/get-message', data, 'POST')
+    },
+    getStudentClass: data => {
+        return request('/api/class/get-student-class', data, 'POST')
+    },
+    getVideoToken: data => {
+        return request('/api/meeting/get-video-token', data, 'POST')
     }
 
 }

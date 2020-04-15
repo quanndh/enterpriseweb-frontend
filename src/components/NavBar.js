@@ -145,15 +145,20 @@ const NavBar = props => {
             >
                 <Toolbar style={{ justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleDrawerOpen}
-                            edge="start"
-                            className={clsx(classes.menuButton, open && classes.hide)}
-                        >
-                            <MenuIcon style={{ fontSize: 36 }} />
-                        </IconButton>
+                        {
+                            user.role !== 4 ? (
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    onClick={handleDrawerOpen}
+                                    edge="start"
+                                    className={clsx(classes.menuButton, open && classes.hide)}
+                                >
+                                    <MenuIcon style={{ fontSize: 36 }} />
+                                </IconButton>
+                            ) : null
+                        }
+
 
                         <img src={logo} alt="" style={{ height: utils.isMobile() ? 80 : 110, width: 110 }} />
 
@@ -206,10 +211,10 @@ const NavBar = props => {
                                         <ListItemText primary={`User Management`} />
                                     </Link>
                                 </ListItem>
-                                <ListItem button key={'Class Management'} onClick={handleDrawerClose}>
-                                    <Link to="/classes" className={classes.link}>
+                                <ListItem button key={'Pair Management'} onClick={handleDrawerClose}>
+                                    <Link to="/pairs" className={classes.link}>
                                         <ListItemIcon><ClassIcon /></ListItemIcon>
-                                        <ListItemText primary={`Class Management`} />
+                                        <ListItemText primary={`Pair Management`} />
                                     </Link>
                                 </ListItem>
                                 {
@@ -224,12 +229,17 @@ const NavBar = props => {
                             </React.Fragment>
                         ) : (
                                 <React.Fragment>
-                                    <ListItem button key={'User Management'} onClick={handleDrawerClose}>
-                                        <Link to="/users/classes" className={classes.link}>
-                                            <ListItemIcon><ClassIcon /></ListItemIcon>
-                                            <ListItemText primary={`My classes`} />
-                                        </Link>
-                                    </ListItem>
+                                    {
+                                        user.role === 3 ? (
+                                            <ListItem button key={'User Management'} onClick={handleDrawerClose}>
+                                                <Link to="/users/pairs" className={classes.link}>
+                                                    <ListItemIcon><ClassIcon /></ListItemIcon>
+                                                    <ListItemText primary={`My pairs`} />
+                                                </Link>
+                                            </ListItem>
+                                        ) : null
+                                    }
+
                                     {/* <ListItem button key={'Messenger'} onClick={handleDrawerClose}>
                                         <Link to="/classes" className={classes.link}>
                                             <ListItemIcon><ClassIcon /></ListItemIcon>

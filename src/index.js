@@ -20,9 +20,6 @@ class AppContainer extends Component {
         apiStore.setStore(store)
     }
 
-    componentDidMount() {
-    }
-
     render() {
         return (
             <Provider store={store} >

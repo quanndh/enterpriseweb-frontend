@@ -121,7 +121,7 @@ const ClassDetail = props => {
                 <Grid item md={6} style={utils.isMobile() ? { width: "100%" } : { display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
                     <div style={{ marginBottom: 20 }}>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            CLASS NAME
+                            Pair objective
                         </Typography>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} >
                             {classDetail.title}
@@ -225,7 +225,7 @@ const ClassDetail = props => {
                     </div>
                     <div style={{ width: '100%' }}>
                         <Typography variant={utils.isMobile() ? 'subtitle1' : 'h6'} style={{ color: "grey", fontWeight: 540, fontStyle: "italic" }} >
-                            ADD STUDENT TO CLASS
+                            ADD STUDENT TO PAIR
                     </Typography>
                         <MultiInput triggerAdd={triggerAdd} onSelectStudent={handleSelectStudent} classId={classDetail.id} style={{ width: '100%' }} />
                         <Button onClick={handleAddStudent} variant="contained" color="primary" style={{ marginTop: 8, color: 'white' }}>

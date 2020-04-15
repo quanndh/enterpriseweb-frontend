@@ -53,7 +53,10 @@ const LoginForm = (props) => {
         let rs = await dataService.login(formData)
         if (rs.code === 0) {
             apiStore.login(rs.data, rs.token)
-            history.push(rs.data.role <= 2 ? '/' : "/users/classes")
+            let url;
+            if (rs.data.role === 3) url = "/users/pairs"
+            else url = "/"
+            history.push(url)
         } else {
             apiStore.showUi(rs.message, rs.code)
         }
@@ -113,7 +116,7 @@ const LoginForm = (props) => {
                         Cancel
                     </Button>
                     <Button onClick={sendResetMail} color="primary">
-                        Open
+                        Send
                     </Button>
                 </DialogActions>
             </Dialog>

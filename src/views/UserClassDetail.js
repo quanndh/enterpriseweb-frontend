@@ -231,13 +231,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const UserClassDetail = props => {
 
-    let { classId } = props.match.params;
     let { user, classInfo, meeting } = props;
 
     const [loading, setLoading] = useState(false);
     const [openShare, setOpenShare] = useState(false)
     const [openMeetingModal, setOpenMeetingModal] = useState(false);
     const [meetingTitle, setMeetingTitle] = useState("");
+    const [noClass, setNoClass] = useState(false)
+    const [classId, setClassId] = useState(props.match.params.classId)
 
     const handleClickOpen = () => {
         setOpenMeetingModal(true);
@@ -250,12 +251,29 @@ const UserClassDetail = props => {
 
     const getClassDetail = async () => {
         setLoading(true)
-        let rs = await dataService.getOneClassDetail({ classId });
+        let rs;
+        if (classId) {
+            rs = await dataService.getOneClassDetail({ classId });
+        } else {
+            let studentClassId = await getStudentClassId();
+            setClassId(studentClassId)
+            rs = await dataService.getOneClassDetail({ classId: studentClassId });
+        }
         setLoading(false)
         if (rs.code === 0) {
             apiStore.actSetClassDetail(rs.data)
             apiStore.actSetMeeting(rs.data.meeting)
-        } else apiStore.showUi(rs.message, rs.code)
+            setNoClass(false)
+        } else {
+            apiStore.showUi(rs.message, rs.code)
+            setNoClass(true)
+        }
+
+    }
+
+    const getStudentClassId = async () => {
+        let rs = await dataService.getStudentClass()
+        return rs.data
     }
 
     useEffect(() => {
@@ -328,144 +346,158 @@ const UserClassDetail = props => {
 
     return (
         <div>
-            {loading && <LinearProgress />}
-            <Dialog
-                open={openMeetingModal}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle id="alert-dialog-slide-title">{"Open a new meeting for this class"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description">
-                        In order to make this meeting more detail please enter the Titile or Purpose of this meeting
-                    </DialogContentText>
-                    <TextField
-                        autoFocus={true}
-                        margin="dense"
-                        label="Meeting titile or purpose"
-                        type="text"
-                        fullWidth
-                        value={meetingTitle}
-                        onChange={(e) => setMeetingTitle(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button onClick={createMeeting} color="primary">
-                        Open
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <div>
-                <div className="class-detail-wrapper" key="class-wrapper">
-                    <div className="class-detail-name">
-                        <Typography variant={utils.isMobile() ? "h5" : "h2"} style={{ fontWeight: 540, color: "white", padding: 28 }} >
-                            {classInfo.title}
+            {
+                noClass ? (
+                    <div className="no-class-wrap">
+                        <img alt="" src="https://www.gstatic.com/classroom/empty_states_comments.png" width={utils.isMobile() ? "200px" : "450px"} />
+                        <Typography variant={utils.isMobile() ? "h5" : "h4"} style={{ color: "grey", fontWeight: 540, marginBottom: 20 }} >
+                            You dont have any pair yet
                         </Typography>
-                    </div>
-                    <Grid container spacing={3} style={{ marginBottom: 16 }}>
-                        <Grid item xs={12}>
-                            {
-                                Object.keys(meeting).length ? (
-                                    <Paper elevation={3} style={{ padding: utils.isMobile() ? 16 : "20px 40px", display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div style={{ maxWidth: "60%", height: "auto" }}>
-                                            <Typography variant={utils.isMobile() ? "h5" : "h4"} style={{ fontWeight: 540, marginBottom: 8 }} >
-                                                {meeting.title}
-                                            </Typography>
-                                            <AvatarGroup>
-                                                {inChatAvatar}
-                                                {
-                                                    meeting.participants && meeting.participants.length > 4 && (
-                                                        <Avatar style={{ width: utils.isMobile() ? 40 : 45, height: utils.isMobile() ? 40 : 45 }}>
-                                                            +{Number(meeting.participants.length) - 4}
-                                                        </Avatar>
+
+                    </div >
+                ) : (
+                        <React.Fragment>
+                            {loading && <LinearProgress />}
+                            <Dialog
+                                open={openMeetingModal}
+                                TransitionComponent={Transition}
+                                keepMounted
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-slide-title"
+                                aria-describedby="alert-dialog-slide-description"
+                            >
+                                <DialogTitle id="alert-dialog-slide-title">{"Open a new meeting for this class"}</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-slide-description">
+                                        In order to make this meeting more detail please enter the Titile or Purpose of this meeting
+                                    </DialogContentText>
+                                    <TextField
+                                        autoFocus={true}
+                                        margin="dense"
+                                        label="Meeting titile or purpose"
+                                        type="text"
+                                        fullWidth
+                                        value={meetingTitle}
+                                        onChange={(e) => setMeetingTitle(e.target.value)}
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose} color="secondary">
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={createMeeting} color="primary">
+                                        Open
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                            <div>
+                                <div className="class-detail-wrapper" key="class-wrapper">
+                                    <div className="class-detail-name">
+                                        <Typography variant={utils.isMobile() ? "h5" : "h2"} style={{ fontWeight: 540, color: "white", padding: 28 }} >
+                                            {classInfo.title}
+                                        </Typography>
+                                    </div>
+                                    <Grid container spacing={3} style={{ marginBottom: 16 }}>
+                                        <Grid item xs={12}>
+                                            {
+                                                Object.keys(meeting).length ? (
+                                                    <Paper elevation={3} style={{ padding: utils.isMobile() ? 16 : "20px 40px", display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <div style={{ maxWidth: "60%", height: "auto" }}>
+                                                            <Typography variant={utils.isMobile() ? "h5" : "h4"} style={{ fontWeight: 540, marginBottom: 8 }} >
+                                                                {meeting.title}
+                                                            </Typography>
+                                                            <AvatarGroup>
+                                                                {inChatAvatar}
+                                                                {
+                                                                    meeting.participants && meeting.participants.length > 4 && (
+                                                                        <Avatar style={{ width: utils.isMobile() ? 40 : 45, height: utils.isMobile() ? 40 : 45 }}>
+                                                                            +{Number(meeting.participants.length) - 4}
+                                                                        </Avatar>
+                                                                    )
+                                                                }
+                                                            </AvatarGroup>
+                                                            <Typography variant={utils.isMobile() ? "subtitle2" : "subtitle1"} style={{ fontWeight: 540, color: 'grey' }} >
+                                                                {moment(meeting.createdAt).format('hh:mm A DD-MM-YYYY')}
+                                                            </Typography>
+                                                        </div>
+                                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                            <Button onClick={() => handleJoinMeeting(meeting.id)} style={{ height: 40, color: "white", marginBottom: 12 }} variant="contained" color="primary">
+                                                                Join
+                                                            </Button>
+                                                            {
+                                                                user.id === meeting.creater ? (
+                                                                    <Button onClick={() => handleCloseMeeting(meeting.id)} style={{ height: 40, color: "white" }} variant="contained" color="secondary">
+                                                                        Close
+                                                                    </Button>
+                                                                ) : null
+                                                            }
+
+                                                        </div>
+
+                                                    </Paper>
+                                                ) : (
+                                                        <React.Fragment>
+
+                                                            {
+                                                                utils.isMobile() ? (
+                                                                    <Button onClick={handleClickOpen} style={{ width: '100%', height: 40, color: "white" }} variant="contained" color="primary">
+                                                                        Open a meeting
+                                                                    </Button>
+                                                                ) : null
+                                                            }
+
+                                                        </React.Fragment>
+
                                                     )
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={3} key="grid-container-1">
+                                        {
+                                            !utils.isMobile() && (
+                                                <Grid item md={4} key="grid-item-1">
+                                                    {
+                                                        !Object.keys(meeting).length ? (
+                                                            <Button onClick={handleClickOpen} style={{ width: '100%', height: 40, color: "white", marginBottom: 16 }} variant="contained" color="primary">
+                                                                Open a meeting
+                                                            </Button>
+                                                        ) : null
+                                                    }
+
+                                                    <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
+                                                </Grid>
+                                            )
+                                        }
+
+                                        <Grid item xs={12} md={8} key="grid-item-2">
+                                            <Paper elevation={3} style={{ padding: utils.isMobile() ? 16 : "20px 40px", display: 'flex', alignItems: 'center', height: openShare ? "auto" : 85, borderRadius: 12, marginBottom: 40 }}>
+                                                {
+                                                    openShare ? (
+                                                        <BlogForm classId={classId} user={user} handleCloseForm={handleCloseForm} />
+                                                    ) : (
+                                                            <div onClick={() => setOpenShare(true)} className="share-text" style={{ display: 'flex', alignItems: 'center' }}>
+                                                                {user.avatar ? <Avatar alt="avatar" src={user.avatar} style={{ width: utils.isMobile() ? 50 : 60, marginRight: 28, height: utils.isMobile() ? 50 : 60 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 50 : 60, height: utils.isMobile() ? 50 : 60, marginRight: 28 }} >{getShortName(user.fullName)}</Avatar>}
+                                                                <p >Share something with your class...</p>
+                                                            </div>
+                                                        )
                                                 }
-                                            </AvatarGroup>
-                                            <Typography variant={utils.isMobile() ? "subtitle2" : "subtitle1"} style={{ fontWeight: 540, color: 'grey' }} >
-                                                {moment(meeting.createdAt).format('hh:mm A DD-MM-YYYY')}
-                                            </Typography>
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                            <Button onClick={() => handleJoinMeeting(meeting.id)} style={{ height: 40, color: "white", marginBottom: 12 }} variant="contained" color="primary">
-                                                Join
-                                            </Button>
-                                            {
-                                                user.id === meeting.creater ? (
-                                                    <Button onClick={() => handleCloseMeeting(meeting.id)} style={{ height: 40, color: "white" }} variant="contained" color="secondary">
-                                                        Close
-                                                    </Button>
-                                                ) : null
-                                            }
-
-                                        </div>
-
-                                    </Paper>
-                                ) : (
-                                        <React.Fragment>
-
-                                            {
-                                                utils.isMobile() ? (
-                                                    <Button onClick={handleClickOpen} style={{ width: '100%', height: 40, color: "white" }} variant="contained" color="primary">
-                                                        Open a meeting
-                                                    </Button>
-                                                ) : null
-                                            }
-
-                                        </React.Fragment>
-
-                                    )
-                            }
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={3} key="grid-container-1">
-                        {
-                            !utils.isMobile() && (
-                                <Grid item md={4} key="grid-item-1">
-                                    {
-                                        !Object.keys(meeting).length ? (
-                                            <Button onClick={handleClickOpen} style={{ width: '100%', height: 40, color: "white", marginBottom: 16 }} variant="contained" color="primary">
-                                                Open a meeting
-                                            </Button>
-                                        ) : null
-                                    }
-
-                                    <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
-                                </Grid>
-                            )
-                        }
-
-                        <Grid item xs={12} md={8} key="grid-item-2">
-                            <Paper elevation={3} style={{ padding: utils.isMobile() ? 16 : "20px 40px", display: 'flex', alignItems: 'center', height: openShare ? "auto" : 85, borderRadius: 12, marginBottom: 40 }}>
-                                {
-                                    openShare ? (
-                                        <BlogForm classId={classId} user={user} handleCloseForm={handleCloseForm} />
-                                    ) : (
-                                            <div onClick={() => setOpenShare(true)} className="share-text" style={{ display: 'flex', alignItems: 'center' }}>
-                                                {user.avatar ? <Avatar alt="avatar" src={user.avatar} style={{ width: utils.isMobile() ? 50 : 60, marginRight: 28, height: utils.isMobile() ? 50 : 60 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 50 : 60, height: utils.isMobile() ? 50 : 60, marginRight: 28 }} >{getShortName(user.fullName)}</Avatar>}
-                                                <p >Share something with your class...</p>
-                                            </div>
-                                        )
-                                }
-                            </Paper>
-                            {displayBlogs}
-                        </Grid>
-                        {
-                            utils.isMobile() && (
-                                <Grid item xs={12} key="grid-item-4">
-                                    <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
-                                </Grid>
-                            )
-                        }
-                    </Grid>
-                </div>
-            </div>
-        </div>
+                                            </Paper>
+                                            {displayBlogs}
+                                        </Grid>
+                                        {
+                                            utils.isMobile() && (
+                                                <Grid item xs={12} key="grid-item-4">
+                                                    <ClassMemberList tutor={Object.keys(classInfo).length ? classInfo.tutor : {}} students={Object.keys(classInfo).length ? classInfo.students : []} />
+                                                </Grid>
+                                            )
+                                        }
+                                    </Grid>
+                                </div>
+                            </div>
+                        </React.Fragment >
+                    )
+            }
+        </div >
     )
 }
 

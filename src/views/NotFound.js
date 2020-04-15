@@ -5,12 +5,12 @@ const NotFound = (props) => {
     let { user } = props;
     return (
         <div id="notfound">
-            <div class="notfound">
-                <div class="notfound-404">
+            <div className="notfound">
+                <div className="notfound-404">
                     <h1>Oops!</h1>
                     <h2>404 - The page you need does not exist</h2>
                 </div>
-                <Link to={user.role >= 3 ? "/users/classes" : "/"} >Home page</Link>
+                <Link to={user.role === 3 ? "/users/classes" : "/"} >Home page</Link>
             </div>
         </div >
     )

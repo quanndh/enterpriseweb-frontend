@@ -13,6 +13,7 @@ import moment from 'moment';
 import Avatar from '@material-ui/core/Avatar';
 import UIfx from 'uifx';
 import msgSound from '../assets/sound/fbsound.mp3';
+import dataService from '../network/dataService';
 
 const msgNoti = new UIfx(msgSound);
 
@@ -40,7 +41,15 @@ class ChatBox extends Component {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        let rs = await dataService.getMeetingMessage({ meetingId: this.props.meetingId, skip: 0, limit: 20 })
+        if (rs.code !== 0) {
+            rs.data = []
+            apiStore.showUi('Unable to load old message', rs.code)
+        } else {
+            rs.data.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
+            this.setState({ message: rs.data })
+        }
         io.socket.on('message', (event) => {
             if (Number(event.data.meeting) === Number(this.props.meetingId)) {
                 msgNoti.play()
@@ -83,7 +92,6 @@ class ChatBox extends Component {
         this.setState({ value: newValue });
     };
 
-
     handleKeyPress = e => {
         if (e.key === 'Enter') {
             this.handleSend()
@@ -92,13 +100,21 @@ class ChatBox extends Component {
 
     render() {
         let { message, value, content } = this.state;
-        let { online } = this.props;
+        let { online, user } = this.props;
+
+        let chatBox = document.getElementById('chatBox');
+        if (chatBox) {
+            let shouldScroll = chatBox.scrollTop + chatBox.clientHeight === chatBox.scrollHeight;
+            if (!shouldScroll) {
+                scrollToBottom(chatBox);
+            }
+        }
 
         let displayMessage = message.length ? message.map(msg => {
             return (
-                <div key={`msg-${msg.id}`} style={{ display: 'flex', padding: utils.isMobile() ? 8 : "8px 10px", marginBottom: 2 }}>
-                    {msg.sender.avatar ? <Avatar alt="avatar" src={msg.sender.avatar} style={{ width: utils.isMobile() ? 36 : 45, marginRight: utils.isMobile() ? 12 : 28, height: utils.isMobile() ? 36 : 45 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 36 : 45, height: utils.isMobile() ? 36 : 45, marginRight: utils.isMobile() ? 12 : 28 }} >{getShortName(msg.sender.fullName)}</Avatar>}
-                    <div style={{ display: 'flex', flexDirection: 'column', width: "100%" }}>
+                <div key={`msg-${msg.id}`} style={{ display: 'flex', flexDirection: 'row', padding: utils.isMobile() ? 8 : "8px 10px", marginTop: 14 }}>
+                    {msg.sender.avatar ? <Avatar alt="avatar" src={msg.sender.avatar} style={{ width: utils.isMobile() ? 36 : 45, marginRight: user.id !== msg.sender.id ? utils.isMobile() ? 12 : 28 : 0, height: utils.isMobile() ? 36 : 45 }} /> : <Avatar size="large" style={{ width: utils.isMobile() ? 36 : 45, height: utils.isMobile() ? 36 : 45, marginRight: utils.isMobile() ? 12 : 28 }} >{getShortName(msg.sender.fullName)}</Avatar>}
+                    <div style={{ display: 'flex', flexDirection: 'column', width: "100%", alignItems: 'flex-start', marginRight: utils.isMobile() ? 12 : 28 }}>
                         <div style={{ display: 'flex', marginBottom: 8, justifyContent: 'space-between', width: "100%" }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <div style={{ display: ' flex', alignItems: 'center' }}>
