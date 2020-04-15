@@ -62,7 +62,7 @@ const UserVideo = ({ participant, handleRemoteOff }) => {
     return (
         <div >
             <video ref={videoRef} autoPlay={true} style={{ width: '100%', height: "100%" }} />
-            <audio ref={audioRef} autoPlay={true} muted={true} />
+            <audio ref={audioRef} autoPlay={true} muted={false} />
         </div>
     );
 };
