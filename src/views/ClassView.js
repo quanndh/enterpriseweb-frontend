@@ -156,7 +156,7 @@ const ClassView = props => {
         <React.Fragment>
             <div>
                 <Typography variant="h6" style={{ fontWeight: 540, fontStyle: "italic" }}>
-                    LIST OF PAIRS
+                    LIST OF TUTORS
                 </Typography>
                 {
                     classList ? (

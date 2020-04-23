@@ -24,6 +24,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
+import config from '../config'
 
 const getShortName = name => {
     let words = name.split(" ")
@@ -116,15 +117,15 @@ const PersonalDrawer = props => {
         finalData.append("images", image);
 
         let token = apiStore.getToken()
-        const host = "http://localhost:1337/api/file/upload-image";
-        const config = {
+        const host = config.HOST + "/api/file/upload-image";
+        const options = {
             headers: {
                 Authorization: "Bearer " + token,
                 'content-type': 'multipart/form-data',
             }
         }
 
-        let rs = await post(host, finalData, config)
+        let rs = await post(host, finalData, options)
 
         if (rs.data.code !== 0) {
             apiStore.showUi(rs.data.message, rs.data.code)

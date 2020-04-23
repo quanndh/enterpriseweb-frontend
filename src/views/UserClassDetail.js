@@ -30,6 +30,7 @@ import excelLogo from '../assets/img/excel.png'
 import wordLogo from '../assets/img/word.png';
 import ppLogo from '../assets/img/ppt.png'
 import fileLogo from '../assets/img/file.png'
+import config from '../config';
 
 const getFileLogo = (fileName) => {
     if (fileName.includes('docx') || fileName.includes('doc')) {
@@ -72,15 +73,15 @@ const BlogForm = props => {
         finalData.append("files", e.target.files[0]);
 
         let token = apiStore.getToken()
-        const host = "http://localhost:1337/api/file/upload-file";
-        const config = {
+        const host = config.HOST + "/api/file/upload-file";
+        const options = {
             headers: {
                 Authorization: "Bearer " + token,
                 'content-type': 'multipart/form-data',
             }
         }
 
-        let rs = await post(host, finalData, config)
+        let rs = await post(host, finalData, options)
 
         if (rs.data.code !== 0) {
             apiStore.showUi(rs.data.message, rs.data.code)

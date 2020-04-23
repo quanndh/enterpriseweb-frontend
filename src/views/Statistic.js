@@ -184,7 +184,7 @@ const Statistic = props => {
                     </div>
                     <div className="statistic-content">
                         <p style={{ color: '#11998e' }}>{overall ? overall.classes : 0}</p>
-                        <p>Classes</p>
+                        <p>Active pairs</p>
                     </div>
                 </Paper>
             </Grid>

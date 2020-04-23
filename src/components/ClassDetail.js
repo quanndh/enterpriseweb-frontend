@@ -143,7 +143,7 @@ const ClassDetail = props => {
                                     ASSIGN STUDENT
                                 </Typography>
                                 <MultiInput triggerAdd={triggerAdd} onSelectStudent={handleSelectStudent} style={{ width: '100%' }} />
-                                <Button onClick={handleAddStudent} variant="contained" color="primary" style={{ marginTop: 8, color: 'white' }}>
+                                <Button disabled={!selectedStudents.length} onClick={handleAddStudent} variant="contained" color="primary" style={{ marginTop: 8, color: 'white' }}>
                                     Assign
                                 </Button>
                             </div>

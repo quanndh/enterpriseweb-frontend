@@ -1,13 +1,12 @@
 
 import axios from 'axios'
 import apiStore from '../services/apiStore'
-
-const HOST = 'http://localhost:1337'
+import config from '../config';
 
 
 const request = async (url, data, method) => {
 
-    url = HOST + url
+    url = config.HOST + url
     let headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
