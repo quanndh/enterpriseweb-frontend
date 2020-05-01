@@ -89,7 +89,7 @@ const BaseLayout = props => {
             <div
                 className="app-body"
                 style={{
-                    backgroundImage: `${location.pathname === "/" && user.role < 2 ? `url(${bg})` : "none"}`
+                    backgroundImage: `${location.pathname === "/" && user.role <= 2 ? `url(${bg})` : "none"}`
                 }}>
                 <Switch>
                     <PrivateRoute exact path="/" render={props => {
