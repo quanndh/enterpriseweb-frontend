@@ -41,6 +41,8 @@ const CameraGrid = (props) => {
             } catch (error) {
                 console.log(123)
             }
+
+
         })
 
         const participantConnected = participant => {
