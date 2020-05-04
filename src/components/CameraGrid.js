@@ -25,19 +25,22 @@ const CameraGrid = (props) => {
         }
 
         getVideoToken(token => {
-            if (token) {
-                Video.connect(token, {
-                    name: props.meetingId
-                }).then(room => {
-                    if (room) {
-                        setRoom(room);
-                        room.on('participantConnected', participantConnected);
-                        room.on('participantDisconnected', participantDisconnected);
-                        room.participants.forEach(participantConnected);
-                    }
-                });
+            try {
+                if (token) {
+                    Video.connect(token, {
+                        name: props.meetingId
+                    }).then(room => {
+                        if (room) {
+                            setRoom(room);
+                            room.on('participantConnected', participantConnected);
+                            room.on('participantDisconnected', participantDisconnected);
+                            room.participants.forEach(participantConnected);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log(123)
             }
-
         })
 
         const participantConnected = participant => {
