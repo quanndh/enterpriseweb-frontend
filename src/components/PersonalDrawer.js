@@ -127,6 +127,8 @@ const PersonalDrawer = props => {
 
         let rs = await post(host, finalData, options)
 
+        console.log(rs.data)
+
         if (rs.data.code !== 0) {
             apiStore.showUi(rs.data.message, rs.data.code)
             setIsLoading(false)
